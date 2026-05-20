@@ -1,0 +1,13 @@
+{
+  "name": "verified-food-review-app",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:api": "npm --workspace apps/api run dev",
+    "dev:mobile": "npm --workspace apps/mobile run start",
+    "lint": "npm --workspace apps/api run lint && npm --workspace apps/mobile run lint"
+  }
+}
+

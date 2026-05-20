@@ -1,0 +1,14 @@
+node_modules/
+.expo/
+!.env
+!.env.*
+!.env.example
+!apps/api/.env.example
+!apps/mobile/.env.example
+dist/
+build/
+coverage/
+*.log
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
