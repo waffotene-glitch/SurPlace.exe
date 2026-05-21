@@ -50,3 +50,13 @@ export function ReviewDraftProvider({ children }: { children: React.ReactNode })
 
   return <ReviewDraftContext.Provider value={value}>{children}</ReviewDraftContext.Provider>;
 }
+
+export function useReviewDraft() {
+  const context = useContext(ReviewDraftContext);
+
+  if (!context) {
+    throw new Error("useReviewDraft must be used within ReviewDraftProvider");
+  }
+
+  return context;
+}
