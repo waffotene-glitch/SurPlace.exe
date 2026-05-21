@@ -23,3 +23,30 @@ const initialDraft: ReviewDraft = {
   capturedMediaUri: null,
   capturedMediaType: null,
 };
+
+const ReviewDraftContext = createContext<ReviewDraftContextValue | undefined>(undefined);
+
+export function ReviewDraftProvider({ children }: { children: React.ReactNode }) {
+  const [draft, setDraft] = useState<ReviewDraft>(initialDraft);
+
+  const value = useMemo<ReviewDraftContextValue>(
+    () => ({
+      draft,
+      updateDraft: (patch) => {
+        setDraft((current) => ({
+          ...current,
+          ...patch,
+        }));
+      },
+      resetDraft: (nextDraft) => {
+        setDraft({
+          ...initialDraft,
+          ...nextDraft,
+        });
+      },
+    }),
+    [draft]
+  );
+
+  return <ReviewDraftContext.Provider value={value}>{children}</ReviewDraftContext.Provider>;
+}

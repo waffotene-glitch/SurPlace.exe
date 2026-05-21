@@ -23,3 +23,13 @@ export function ReviewRefreshProvider({ children }: { children: React.ReactNode 
     <ReviewRefreshContext.Provider value={value}>{children}</ReviewRefreshContext.Provider>
   );
 }
+
+export function useReviewRefresh() {
+  const context = useContext(ReviewRefreshContext);
+
+  if (!context) {
+    throw new Error("useReviewRefresh must be used within ReviewRefreshProvider");
+  }
+
+  return context;
+}
