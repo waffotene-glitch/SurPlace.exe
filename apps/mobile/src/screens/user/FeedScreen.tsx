@@ -73,3 +73,61 @@ useFocusEffect(
                 });
                 return;
               }
+                if (item.restaurant) {
+                navigation.navigate("RestaurantDetails", {
+                  restaurantId: item.restaurant._id,
+                  restaurantName: item.restaurant.name,
+                });
+              }
+            }}
+          />
+          {item.targetType === "plate" && item.plate && item.restaurant ? (
+            <Pressable
+              onPress={() =>
+                navigation.navigate("PlateDetails", {
+                  plateId: item.plate!._id,
+                  plateName: item.plate!.name,
+                  restaurantId: item.restaurant!._id,
+                  restaurantName: item.restaurant!.name,
+                })
+              }
+              style={{ marginBottom: 10 }}
+            >
+              <Text style={{ color: "#1f6f5f", fontWeight: "700" }}>Go to plate</Text>
+            </Pressable>
+          ) : null}
+          {item.restaurant ? (
+            <Pressable
+              onPress={() =>
+                navigation.navigate("RestaurantDetails", {
+                  restaurantId: item.restaurant!._id,
+                  restaurantName: item.restaurant!.name,
+                })
+              }
+              style={{ marginBottom: 10 }}
+            >
+              <Text style={{ color: "#1f6f5f", fontWeight: "700" }}>Go to restaurant</Text>
+            </Pressable>
+          ) : null}
+          {token ? (
+            <Pressable
+              onPress={() => {
+                void likeReview(token, item._id).then((response) => {
+                  setItems((current) =>
+                    current.map((review) =>
+                      review._id === item._id
+                        ? { ...review, likesCount: response.likesCount }
+                        : review
+                    )
+                  );
+                });
+              }}
+            >
+              <Text style={{ color: "#1f6f5f", fontWeight: "700" }}>Like</Text>
+            </Pressable>
+          ) : null}
+        </Card>
+      ))}
+    </Screen>
+  );
+}
