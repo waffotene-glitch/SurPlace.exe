@@ -37,3 +37,25 @@ useFocusEffect(
   if (isLoading) {
     return <LoadingState label="Loading verified feed..." />;
   }
+   return (
+    <Screen scroll>
+      <Title subtitle="Verified community posts with media, like action, and direct navigation.">
+        Food Feed
+      </Title>
+      {items.map((item) => (
+        <Card key={item._id}>
+          <Badge
+            label={item.targetType === "plate" ? "Plate Review" : "Restaurant Review"}
+            tone={item.targetType === "plate" ? "warning" : "neutral"}
+          />
+          <CardTitle>{item.restaurant?.name || "Restaurant"}</CardTitle>
+          {item.plate?.name ? <Meta>Plate: {item.plate.name}</Meta> : null}
+          <Meta>
+            {item.user?.fullName} - Rating {item.rating}/5 - {item.likesCount} likes
+          </Meta>
+          <MediaPreview
+            uri={item.media[0]?.url}
+            mediaType={item.media[0]?.type}
+            height={260}
+            fallbackText="Review media is unavailable for this feed item."
+          />
