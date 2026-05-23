@@ -22,3 +22,18 @@ export function FeedScreen({ navigation }: { navigation: any }) {
       setIsLoading(false);
     }
   };
+useFocusEffect(
+    useCallback(() => {
+      void load();
+    }, [])
+  );
+
+  useEffect(() => {
+    if (refreshToken > 0) {
+      void load();
+    }
+  }, [refreshToken]);
+
+  if (isLoading) {
+    return <LoadingState label="Loading verified feed..." />;
+  }
