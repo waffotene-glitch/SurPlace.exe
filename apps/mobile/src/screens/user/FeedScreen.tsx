@@ -59,3 +59,17 @@ useFocusEffect(
             height={260}
             fallbackText="Review media is unavailable for this feed item."
           />
+                    <Text style={{ marginTop: 10 }}>{item.comment || "No comment added."}</Text>
+          <Button
+            label="View details"
+            variant="secondary"
+            onPress={() => {
+              if (item.targetType === "plate" && item.plate && item.restaurant) {
+                navigation.navigate("PlateDetails", {
+                  plateId: item.plate._id,
+                  plateName: item.plate.name,
+                  restaurantId: item.restaurant._id,
+                  restaurantName: item.restaurant.name,
+                });
+                return;
+              }
