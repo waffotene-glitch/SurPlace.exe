@@ -29,6 +29,18 @@ class ManagerService {
       plates: plates.map(mapPlate),
     };
   }
+
+  async listManagerReviews(managedRestaurant) {
+    const reviews = await Review.find({
+      restaurant: managedRestaurant._id,
+    })
+      .populate("user", "fullName avatarUrl")
+      .populate("restaurant", "_id name")
+      .populate("plate", "name")
+      .sort({ createdAt: -1 });
+
+    return { items: reviews };
+  }
 }
 
 
