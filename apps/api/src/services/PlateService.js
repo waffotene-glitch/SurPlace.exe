@@ -54,6 +54,91 @@ class PlateService {
 
     return { items: plates.map(mapPlate) };
   }
+
+  async createManagedPlate(managedRestaurant, data) {
+    const {
+      name,
+      description = "",
+      imageUrl = "",
+      price = null,
+      isAvailable = true,
+    } = data;
+
+    if (!name || !name.trim()) {
+      throw createServiceError(400, "name is required");
+    }
+
+    const plate = await Plate.create({
+      restaurant: managedRestaurant._id,
+      name: name.trim(),
+      description: description.trim(),
+      imageUrl,
+      price,
+      isAvailable,
+    });
+
+    return {
+      statusCode: 201,
+      body: { plate: mapPlate(plate) },
+    };
+  }
+
+  async updateManagedPlate(managedRestaurant, plateId, data) {
+    const plate = await Plate.findOne({
+      _id: plateId,
+      restaurant: managedRestaurant._id,
+    });
+
+    if (!plate) {
+      throw createServiceError(404, "Plate not found for this manager");
+    }
+
+    const { name, description, imageUrl, price, isAvailable } = data;
+
+    if (name !== undefined) {
+      if (!name.trim()) {
+        throw createServiceError(400, "name cannot be empty");
+      }
+
+      plate.name = name.trim();
+    }
+
+    if (description !== undefined) {
+      plate.description = description.trim();
+    }
+
+    if (imageUrl !== undefined) {
+      plate.imageUrl = imageUrl;
+    }
+
+    if (price !== undefined) {
+      plate.price = price;
+    }
+
+    if (isAvailable !== undefined) {
+      plate.isAvailable = isAvailable;
+    }
+
+    await plate.save();
+
+    return { plate: mapPlate(plate) };
+  }
+
+  async deleteManagedPlate(managedRestaurant, plateId) {
+    const plate = await Plate.findOne({
+      _id: plateId,
+      restaurant: managedRestaurant._id,
+    });
+
+    if (!plate) {
+      throw createServiceError(404, "Plate not found for this manager");
+    }
+
+    await plate.deleteOne();
+
+    return { success: true };
+  }
+  
 }
 
 

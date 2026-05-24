@@ -72,7 +72,61 @@ class RestaurantService {
       throw createServiceError(400, "location.coordinates must be [lng, lat]");
     }
   }
+  
+  buildRestaurantUpdate(data, managerId) {
+    const {
+      name,
+      description = "",
+      coverImageUrl = "",
+      cuisineTags = [],
+      location,
+    } = data;
 
+    return {
+      manager: managerId,
+      name: name.trim(),
+      description: description.trim(),
+      coverImageUrl,
+      cuisineTags,
+      location: {
+        address: location.address.trim(),
+        coordinates: {
+          type: "Point",
+          coordinates: location.coordinates,
+        },
+      },
+    };
+  }
+
+  async upsertManagedRestaurant({ managedRestaurant, user, data }) {
+    this.validateRestaurantPayload(data);
+    const restaurantUpdate = this.buildRestaurantUpdate(data, user._id);
+
+    if (!managedRestaurant) {
+      const restaurant = await Restaurant.create(restaurantUpdate);
+
+      user.managedRestaurant = restaurant._id;
+      await user.save();
+
+      return {
+        statusCode: 201,
+        body: { restaurant: mapRestaurant(restaurant) },
+      };
+    }
+
+    managedRestaurant.name = restaurantUpdate.name;
+    managedRestaurant.description = restaurantUpdate.description;
+    managedRestaurant.coverImageUrl = restaurantUpdate.coverImageUrl;
+    managedRestaurant.cuisineTags = restaurantUpdate.cuisineTags;
+    managedRestaurant.location = restaurantUpdate.location;
+
+    await managedRestaurant.save();
+
+    return {
+      statusCode: 200,
+      body: { restaurant: mapRestaurant(managedRestaurant) },
+    };
+  }
 }
 
 module.exports = new RestaurantService();
