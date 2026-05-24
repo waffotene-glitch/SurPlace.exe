@@ -19,3 +19,6 @@ class ReviewService {
     return { items: reviews };
   }
 }
+
+
+module.exports = new ReviewService();

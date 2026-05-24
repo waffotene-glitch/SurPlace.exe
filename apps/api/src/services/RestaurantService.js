@@ -24,3 +24,5 @@ class RestaurantService {
   }
 
 }
+
+module.exports = new RestaurantService();

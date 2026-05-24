@@ -21,3 +21,7 @@ class PlateService {
     return { items: plates.map(mapPlate) };
   }
 }
+
+
+
+module.exports = new PlateService();
