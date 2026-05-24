@@ -46,6 +46,118 @@ class ReviewService {
       throw createServiceError(400, "Review media must include a Cloudinary secure_url");
     }
   }
+
+  async createReview({ user, data }) {
+    const {
+      restaurantId,
+      plateId = null,
+      rating,
+      comment = "",
+      submittedCoordinates,
+      media = [],
+    } = data;
+
+    this.validateReviewPayload(data);
+
+    const restaurant = await Restaurant.findById(restaurantId);
+    if (!restaurant) {
+      throw createServiceError(404, "Restaurant not found");
+    }
+
+    let plate = null;
+    if (plateId) {
+      plate = await Plate.findById(plateId);
+      if (!plate) {
+        throw createServiceError(404, "Plate not found");
+      }
+
+      if (String(plate.restaurant) !== String(restaurant._id)) {
+        throw createServiceError(400, "Plate must belong to the same restaurant");
+      }
+    }
+
+    const hasSubmittedCoordinates =
+      submittedCoordinates &&
+      typeof submittedCoordinates.lat === "number" &&
+      typeof submittedCoordinates.lng === "number";
+
+    let distanceMeters = null;
+    let isWithinAllowedRadius = false;
+
+    if (hasSubmittedCoordinates) {
+      const restaurantCoordinates = {
+        lng: restaurant.location.coordinates.coordinates[0],
+        lat: restaurant.location.coordinates.coordinates[1],
+      };
+
+      distanceMeters = calculateDistanceMeters(submittedCoordinates, restaurantCoordinates);
+      isWithinAllowedRadius = distanceMeters <= env.reviewVerificationRadiusMeters;
+    }
+
+    if (env.enforceLocationVerification) {
+      if (!hasSubmittedCoordinates) {
+        throw createServiceError(
+          403,
+          "Location permission is required while strict location verification is enabled"
+        );
+      }
+
+      if (!isWithinAllowedRadius) {
+        throw createServiceError(403, "You must be near this restaurant to submit a verified review");
+      }
+    }
+
+    const review = await Review.create({
+      user: user._id,
+      restaurant: restaurant._id,
+      plate: plate ? plate._id : null,
+      targetType: plate ? "plate" : "restaurant",
+      rating,
+      comment,
+      media,
+      verification: {
+        submittedCoordinates: hasSubmittedCoordinates ? submittedCoordinates : undefined,
+        distanceMeters,
+        radiusMeters: hasSubmittedCoordinates ? env.reviewVerificationRadiusMeters : null,
+        isVerifiedOnSite: isWithinAllowedRadius,
+      },
+    });
+
+    return {
+      statusCode: 201,
+      body: { review },
+    };
+  }
+
+  async likeReview({ userId, reviewId }) {
+    const review = await Review.findById(reviewId);
+
+    if (!review) {
+      throw createServiceError(404, "Review not found");
+    }
+
+    try {
+      await Like.create({
+        user: userId,
+        review: review._id,
+      });
+    } catch (error) {
+      if (error.code === 11000) {
+        throw createServiceError(409, "Review already liked by this user");
+      }
+
+      throw error;
+    }
+
+    review.likesCount += 1;
+    await review.save();
+
+    return {
+      statusCode: 201,
+      body: { likesCount: review.likesCount },
+    };
+  }
+  
 }
 
 
