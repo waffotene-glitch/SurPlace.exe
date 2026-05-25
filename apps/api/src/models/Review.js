@@ -103,3 +103,5 @@ reviewSchema.pre("validate", function validateTarget(next) {
 
   next();
 });
+
+module.exports = mongoose.model("Review", reviewSchema);
