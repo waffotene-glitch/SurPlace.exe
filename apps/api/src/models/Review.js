@@ -89,3 +89,17 @@ const reviewSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+reviewSchema.pre("validate", function validateTarget(next) {
+  const hasPlate = Boolean(this.plate);
+
+  if (this.targetType === "plate" && !hasPlate) {
+    return next(new Error("Plate reviews must include a plate"));
+  }
+
+  if (this.targetType === "restaurant" && hasPlate) {
+    return next(new Error("Restaurant reviews cannot include a plate"));
+  }
+
+  next();
+});

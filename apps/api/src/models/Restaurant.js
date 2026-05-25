@@ -54,3 +54,5 @@ const restaurantSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+restaurantSchema.index({ "location.coordinates": "2dsphere" });
