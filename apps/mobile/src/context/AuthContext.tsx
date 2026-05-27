@@ -1,3 +1,4 @@
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { login, register, getMe } from "../services/authApi";
 import { clearStoredSession, getStoredSession, saveSession } from "../services/authStorage";
 import { AuthUser, UserRole } from "../types/api";
@@ -20,8 +21,8 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [token, setToken] = useState<string | null>(true);
-  const [user, setUser] = useState<AuthUser | null>(true);
+  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -34,7 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         const parsedUser = JSON.parse(stored.user) as AuthUser;
         setToken(stored.token);
-        
+        setUser(parsedUser);
 
         const fresh = await getMe(stored.token);
         setUser(fresh.user);
@@ -42,7 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } catch (_error) {
         await clearStoredSession();
         setToken(null);
-      
+        setUser(null);
       } finally {
         setIsLoading(false);
       }
@@ -93,6 +94,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       value={{
         token,
         user,
+        isLoading,
         signIn,
         signUp,
         signOut,
@@ -102,4 +104,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       {children}
     </AuthContext.Provider>
   );
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error("useAuth must be used within AuthProvider");
+  }
+
+  return context;
 }
