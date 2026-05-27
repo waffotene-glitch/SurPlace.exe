@@ -58,7 +58,7 @@ export function RegisterScreen({ navigation }: { navigation: any }) {
             </Text>
           </View>
           <AuthRoleCard
-            title="Discover & Review"
+            title="Discover and Review"
             subtitle="For diners who want to explore restaurants, rate dishes, and share trusted visits."
             type="user"
             active={role === "user"}
@@ -119,8 +119,8 @@ export function RegisterScreen({ navigation }: { navigation: any }) {
             onChangeText={setPassword}
             placeholder="Create a password"
             secureTextEntry={!showPassword}
-            icon={showPassword ? AuthIcons.unlock("#1C3B8B") : AuthIcons.lock()}
-            rightIcon={showPassword ? AuthIcons.unlock("#1C3B8B") : AuthIcons.lock()}
+            icon={showPassword ? AuthIcons.unlock("#5673c5") : AuthIcons.lock()}
+            rightIcon={showPassword ? AuthIcons.unlock("#eda200") : AuthIcons.lock()}
             onRightIconPress={() => setShowPassword((current) => !current)}
           />
           <AuthHelper>Password must be at least 4 characters and include at least one letter and one number.</AuthHelper>
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   roleTitle: {
-    color: "#001e36",
+    color: "#91a4b4",
     fontSize: 28,
     fontWeight: "800",
     marginBottom: 10,
@@ -205,14 +205,14 @@ const styles = StyleSheet.create({
   selectedRoleBanner: {
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: "#dbe4f0",
+    borderColor: "#dbe4f0e2",
     backgroundColor: "#f8fafc",
     paddingHorizontal: 10,
     paddingVertical: 10,
     marginBottom: 18,
   },
   selectedRoleEyebrow: {
-    color: "#667085",
+    color: "#567dd2",
     fontSize: 11,
     fontWeight: "700",
     textTransform: "uppercase",
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   selectedRoleValue: {
-    color: "#001e36",
+    color: "#72a1c8",
     fontSize: 16,
     fontWeight: "800",
   },
