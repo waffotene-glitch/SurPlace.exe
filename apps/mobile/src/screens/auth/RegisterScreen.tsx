@@ -58,7 +58,7 @@ export function RegisterScreen({ navigation }: { navigation: any }) {
             </Text>
           </View>
           <AuthRoleCard
-            title="Discover and Review"
+            title="Discover & Review"
             subtitle="For diners who want to explore restaurants, rate dishes, and share trusted visits."
             type="user"
             active={role === "user"}
@@ -119,8 +119,8 @@ export function RegisterScreen({ navigation }: { navigation: any }) {
             onChangeText={setPassword}
             placeholder="Create a password"
             secureTextEntry={!showPassword}
-            icon={showPassword ? AuthIcons.unlock("#5673c5") : AuthIcons.lock()}
-            rightIcon={showPassword ? AuthIcons.unlock("#eda200") : AuthIcons.lock()}
+            icon={showPassword ? AuthIcons.unlock("#666c7c") : AuthIcons.lock()}
+            rightIcon={showPassword ? AuthIcons.unlock("#1C3B8B") : AuthIcons.lock()}
             onRightIconPress={() => setShowPassword((current) => !current)}
           />
           <AuthHelper>Password must be at least 4 characters and include at least one letter and one number.</AuthHelper>
