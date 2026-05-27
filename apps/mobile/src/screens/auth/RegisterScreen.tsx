@@ -119,7 +119,7 @@ export function RegisterScreen({ navigation }: { navigation: any }) {
             onChangeText={setPassword}
             placeholder="Create a password"
             secureTextEntry={!showPassword}
-            icon={showPassword ? AuthIcons.unlock("#666c7c") : AuthIcons.lock()}
+            icon={showPassword ? AuthIcons.unlock("#1C3B8B") : AuthIcons.lock()}
             rightIcon={showPassword ? AuthIcons.unlock("#1C3B8B") : AuthIcons.lock()}
             onRightIconPress={() => setShowPassword((current) => !current)}
           />
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   roleTitle: {
-    color: "#91a4b4",
+    color: "#001e36",
     fontSize: 28,
     fontWeight: "800",
     marginBottom: 10,
@@ -205,14 +205,14 @@ const styles = StyleSheet.create({
   selectedRoleBanner: {
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: "#dbe4f0e2",
+    borderColor: "#dbe4f0",
     backgroundColor: "#f8fafc",
     paddingHorizontal: 10,
     paddingVertical: 10,
     marginBottom: 18,
   },
   selectedRoleEyebrow: {
-    color: "#567dd2",
+    color: "#667085",
     fontSize: 11,
     fontWeight: "700",
     textTransform: "uppercase",
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   selectedRoleValue: {
-    color: "#72a1c8",
+    color: "#001e36",
     fontSize: 16,
     fontWeight: "800",
   },
