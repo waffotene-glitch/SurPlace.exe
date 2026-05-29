@@ -10,6 +10,7 @@ const Review = require("../models/Review");
 const Like = require("../models/Like");
 
 const DEMO_PASSWORD = "Password123!";
+
 const demoUsers = [
   {
     fullName: "Aline Mvondo",
@@ -306,3 +307,288 @@ const reviewTemplates = [
     comment: "Fresh ingredients, good texture, and the finish on the sauce made this easy to recommend.",
   },
 ];
+
+const dayOffsets = [2, 4, 6, 9, 12, 15, 18, 22, 25, 29, 33, 37, 41, 46, 52];
+
+function buildVerifiedCoordinates(baseCoordinates, lngOffset, latOffset) {
+  return {
+    lng: Number((baseCoordinates[0] + lngOffset).toFixed(6)),
+    lat: Number((baseCoordinates[1] + latOffset).toFixed(6)),
+  };
+}
+
+function buildRecentDate(dayOffset, minuteOffset) {
+  const timestamp = new Date();
+  timestamp.setDate(timestamp.getDate() - dayOffset);
+  timestamp.setHours(12, minuteOffset, 0, 0);
+  return timestamp;
+}
+
+function buildMediaForReview(_restaurantIndex, _reviewSlot, globalIndex) {
+  return [
+    {
+      type: "image",
+      url: imageLibrary.reviewImages[globalIndex % imageLibrary.reviewImages.length],
+      source: "camera",
+    },
+  ];
+}
+
+function buildMediaDebugShape(review) {
+  const media = review?.media?.[0] || null;
+
+  return {
+    media,
+    "media[0].url": media?.url ?? null,
+    "media[0].secureUrl": media?.secureUrl ?? null,
+    "media[0].mediaUrl": media?.mediaUrl ?? null,
+    "media[0].type": media?.type ?? null,
+    "media[0].mediaType": media?.mediaType ?? null,
+    "media[0].resourceType": media?.resourceType ?? null,
+    "media[0].source": media?.source ?? null,
+  };
+}
+
+async function recalculateRatingsForRestaurant(restaurantId) {
+  const restaurantReviews = await Review.find({ restaurant: restaurantId });
+  const restaurantAverage =
+    restaurantReviews.reduce((sum, review) => sum + review.rating, 0) /
+    (restaurantReviews.length || 1);
+
+  await Restaurant.findByIdAndUpdate(restaurantId, {
+    averageRating: restaurantReviews.length ? Number(restaurantAverage.toFixed(1)) : 0,
+    totalReviews: restaurantReviews.length,
+  });
+
+  const plates = await Plate.find({ restaurant: restaurantId });
+  for (const plate of plates) {
+    const plateReviews = await Review.find({ plate: plate._id });
+    const plateAverage =
+      plateReviews.reduce((sum, review) => sum + review.rating, 0) /
+      (plateReviews.length || 1);
+
+    plate.averageRating = plateReviews.length ? Number(plateAverage.toFixed(1)) : 0;
+    plate.totalReviews = plateReviews.length;
+    await plate.save();
+  }
+}
+
+async function resetCollections() {
+  await Promise.all([
+    Like.deleteMany({}),
+    Review.deleteMany({}),
+    Plate.deleteMany({}),
+    Restaurant.deleteMany({}),
+    User.deleteMany({}),
+  ]);
+}
+
+async function createUsers() {
+  try {
+    await User.collection.dropIndex("managedRestaurant_1");
+  } catch (error) {
+    if (error.codeName !== "IndexNotFound") {
+      throw error;
+    }
+  }
+
+  await User.syncIndexes();
+
+  const createdManagers = await User.create(managerUsers);
+  const createdDemoUsers = await User.create(demoUsers);
+
+  return {
+    managers: createdManagers,
+    primaryManager: createdManagers.find((manager) => manager.email === "manager@verifiedfood.demo"),
+    demoUsers: createdDemoUsers,
+  };
+}
+
+async function createRestaurantsAndPlates(managers) {
+  const restaurants = [];
+  const plates = [];
+
+  for (let index = 0; index < restaurantBlueprints.length; index += 1) {
+    const blueprint = restaurantBlueprints[index];
+    const manager = managers[index];
+
+    const restaurant = await Restaurant.create({
+      manager: manager._id,
+      name: blueprint.name,
+      description: blueprint.description,
+      coverImageUrl: imageLibrary.restaurants[index % imageLibrary.restaurants.length],
+      cuisineTags: blueprint.cuisineTags,
+      location: {
+        address: blueprint.address,
+        coordinates: {
+          type: "Point",
+          coordinates: blueprint.coordinates,
+        },
+      },
+    });
+
+    manager.managedRestaurant = restaurant._id;
+    await manager.save();
+
+    restaurants.push(restaurant);
+
+    for (let plateIndex = 0; plateIndex < blueprint.plates.length; plateIndex += 1) {
+      const plateBlueprint = blueprint.plates[plateIndex];
+      const plate = await Plate.create({
+        restaurant: restaurant._id,
+        name: plateBlueprint.name,
+        description: plateBlueprint.description,
+        imageUrl:
+          plateBlueprint.imageUrl ||
+          imageLibrary.plates[(index * 5 + plateIndex) % imageLibrary.plates.length],
+        price: plateBlueprint.price,
+        isAvailable: true,
+      });
+
+      plates.push(plate);
+    }
+  }
+
+  return { restaurants, plates };
+}
+
+async function createReviews(restaurants, plates, users) {
+  const reviews = [];
+  const plateMap = new Map();
+  for (const plate of plates) {
+    const list = plateMap.get(String(plate.restaurant)) || [];
+    list.push(plate);
+    plateMap.set(String(plate.restaurant), list);
+  }
+
+  for (let restaurantIndex = 0; restaurantIndex < restaurants.length; restaurantIndex += 1) {
+    const restaurant = restaurants[restaurantIndex];
+    const restaurantPlates = plateMap.get(String(restaurant._id)) || [];
+
+    for (let reviewSlot = 0; reviewSlot < 6; reviewSlot += 1) {
+      const template = reviewTemplates[reviewSlot % reviewTemplates.length];
+      const reviewer = users[(restaurantIndex + reviewSlot) % users.length];
+      const selectedPlate = template.targetType === "plate"
+        ? restaurantPlates[reviewSlot % restaurantPlates.length]
+        : null;
+      const createdAt = buildRecentDate(
+        dayOffsets[(restaurantIndex * 3 + reviewSlot) % dayOffsets.length],
+        10 + restaurantIndex * 7 + reviewSlot * 5
+      );
+
+      const review = await Review.create({
+        user: reviewer._id,
+        restaurant: restaurant._id,
+        plate: selectedPlate ? selectedPlate._id : null,
+        targetType: template.targetType,
+        rating: template.rating - (reviewSlot === 4 ? 1 : 0),
+        comment:
+          template.targetType === "plate"
+            ? `${selectedPlate.name}: ${template.comment}`
+            : `${restaurant.name}: ${template.comment}`,
+        media: buildMediaForReview(restaurantIndex, reviewSlot, restaurantIndex * 6 + reviewSlot),
+        verification: {
+          submittedCoordinates: buildVerifiedCoordinates(
+            restaurant.location.coordinates.coordinates,
+            0.0002 + reviewSlot * 0.00003,
+            0.0002 + restaurantIndex * 0.00004
+          ),
+          distanceMeters: 35 + restaurantIndex * 8 + reviewSlot * 4,
+          radiusMeters: 200,
+          isVerifiedOnSite: true,
+        },
+        likesCount: 0,
+        createdAt,
+        updatedAt: createdAt,
+      });
+
+      reviews.push(review);
+    }
+  }
+
+  return reviews;
+}
+
+async function createLikes(reviews, demoUsers) {
+  const likePlans = [];
+
+  reviews.forEach((review, index) => {
+    const firstLiker = demoUsers[(index + 1) % demoUsers.length];
+    const secondLiker = demoUsers[(index + 2) % demoUsers.length];
+
+    if (index % 2 === 0) {
+      likePlans.push({ user: firstLiker._id, review: review._id });
+    }
+
+    if (index % 3 === 0) {
+      likePlans.push({ user: secondLiker._id, review: review._id });
+    }
+  });
+
+  if (!likePlans.length) {
+    return 0;
+  }
+
+  await Like.insertMany(likePlans);
+
+  for (const review of reviews) {
+    const likesCount = likePlans.filter((like) => String(like.review) === String(review._id)).length;
+    if (likesCount > 0) {
+      await Review.findByIdAndUpdate(review._id, { likesCount });
+    }
+  }
+
+  return likePlans.length;
+}
+
+async function recalculateAllRatings(restaurants) {
+  for (const restaurant of restaurants) {
+    await recalculateRatingsForRestaurant(restaurant._id);
+  }
+}
+
+async function seed() {
+  await connectDatabase();
+
+  await resetCollections();
+
+  const { managers, primaryManager, demoUsers: createdDemoUsers } = await createUsers();
+  const { restaurants, plates } = await createRestaurantsAndPlates(managers);
+  const reviews = await createReviews(restaurants, plates, createdDemoUsers);
+  await createLikes(reviews, createdDemoUsers);
+  await recalculateAllRatings(restaurants);
+  const imageReviewCount = reviews.filter((review) => review.media[0]?.type === "image").length;
+  const videoReviewCount = reviews.filter((review) => review.media[0]?.type === "video").length;
+  const sampleImageReview = await Review.findOne({ "media.0.type": "image" }).lean();
+  const sampleVideoReview = await Review.findOne({ "media.0.type": "video" }).lean();
+
+  console.log("Demo data reset complete.");
+  console.log("");
+  console.log("Manager credentials:");
+  console.log(`- ${primaryManager.email} / ${DEMO_PASSWORD}`);
+  console.log("");
+  console.log("User credentials:");
+  createdDemoUsers.forEach((user) => {
+    console.log(`- ${user.email} / ${DEMO_PASSWORD}`);
+  });
+  console.log("");
+  console.log(`Restaurants created: ${restaurants.length}`);
+  console.log(`Plates created: ${plates.length}`);
+  console.log(`Reviews created: ${reviews.length}`);
+  console.log(`Image reviews created: ${imageReviewCount}`);
+  console.log(`Video reviews created: ${videoReviewCount}`);
+  console.log("Sample image review media:");
+  console.log(JSON.stringify(buildMediaDebugShape(sampleImageReview), null, 2));
+  console.log("Sample video review media:");
+  console.log(JSON.stringify(buildMediaDebugShape(sampleVideoReview), null, 2));
+}
+
+seed()
+  .catch((error) => {
+    console.error("Seeding failed", error);
+    process.exitCode = 1;
+  })
+  .finally(async () => {
+    await disconnectDatabase();
+    await mongoose.connection.close();
+  });
