@@ -41,3 +41,35 @@ export function ManagerRestaurantScreen() {
       return "";
     }
 
+    return [value.name, value.street, value.city, value.region, value.postalCode, value.country]
+      .filter(Boolean)
+      .join(", ");
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!token) {
+        return;
+      }
+
+      const load = async () => {
+        try {
+          const response = await getManagerRestaurant(token);
+          setRestaurantId(response.restaurant.id);
+          setName(response.restaurant.name);
+          setDescription(response.restaurant.description);
+          setCoverImageUrl(response.restaurant.coverImageUrl);
+          setCuisineTags(response.restaurant.cuisineTags.join(", "));
+          setAddress(response.restaurant.location.address);
+          setCoordinates(response.restaurant.location.coordinates.coordinates);
+          setLocalCoverPreviewUri(response.restaurant.coverImageUrl || null);
+          setUploadStatus(null);
+          setLocationMessage(
+            response.restaurant.location.coordinates.coordinates?.length
+              ? "Location selected"
+              : null
+          );
+          formTask.setError(null);
+        } catch (_loadError) {
+          setRestaurantId(null);
+        }
