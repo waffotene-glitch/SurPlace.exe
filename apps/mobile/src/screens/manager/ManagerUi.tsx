@@ -100,3 +100,28 @@ export function ManagerCard({
 export function ManagerMetric({
   label,
   value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <View style={styles.metric}>
+      <Text style={styles.metricValue}>{value}</Text>
+      <Text style={styles.metricLabel}>{label}</Text>
+    </View>
+  );
+}
+
+export function ManagerLabel({ children }: { children: React.ReactNode }) {
+  return <Text style={styles.label}>{children}</Text>;
+}
+
+export function ManagerInput({
+  value,
+  onChangeText,
+  placeholder,
+  multiline,
+  editable = true,
+}: {
+  value: string;
+  onChangeText: (value: string) => void;
