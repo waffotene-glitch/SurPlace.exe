@@ -13,3 +13,19 @@ export function ReviewCameraScreen({ route, navigation }: { route: any; navigati
   const [isRecording, setIsRecording] = useState(false);
   const { updateDraft } = useReviewDraft();
   const captureMode = route.params?.captureMode === "video" ? "video" : "image";
+
+    if (!permission) {
+    return (
+      <Screen>
+        <Title>Loading camera permission...</Title>
+      </Screen>
+    );
+  }
+
+  if (captureMode === "video" && !microphonePermission) {
+    return (
+      <Screen>
+        <Title>Loading microphone permission...</Title>
+      </Screen>
+    );
+  }
