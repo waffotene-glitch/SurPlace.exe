@@ -225,3 +225,27 @@ export function ManagerInfoText({
 }: {
   children: React.ReactNode;
   tone?: "default" | "muted" | "success" | "danger";
+}) {
+  const color =
+    tone === "muted"
+      ? managerColors.textSoft
+      : tone === "success"
+        ? "#8ee2be"
+        : tone === "danger"
+          ? "#ffb3b3"
+          : managerColors.textMuted;
+
+  return <Text style={[styles.infoText, { color }]}>{children}</Text>;
+}
+
+export function ManagerLoading({ label }: { label: string }) {
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.loadingWrap}>
+        <ActivityIndicator size="large" color={managerColors.accent} />
+        <Text style={styles.loadingText}>{label}</Text>
+      </View>
+    </SafeAreaView>
+  );
+}
+
