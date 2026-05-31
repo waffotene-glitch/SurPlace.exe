@@ -58,3 +58,22 @@ function getManagerTabIcon(routeName: string, focused: boolean) {
     return <Ionicons name={focused ? "storefront" : "storefront-outline"} size={size} color={color} />;
   }
 
+  if (routeName === "Plates") {
+    return <Ionicons name={focused ? "restaurant" : "restaurant-outline"} size={size} color={color} />;
+  }
+
+  return <Ionicons name={focused ? "person-circle" : "person-circle-outline"} size={size} color={color} />;
+}
+
+function AuthNavigator() {
+  return (
+    <AuthStack.Navigator>
+      <AuthStack.Screen name="Login" component={LoginScreen} />
+      <AuthStack.Screen name="Register" component={RegisterScreen} />
+    </AuthStack.Navigator>
+  );
+}
+
+function OnboardingNavigator({ onComplete }: { onComplete: () => void }) {
+  return (
+    <OnboardingStack.Navigator screenOptions={{ headerShown: false }}>
