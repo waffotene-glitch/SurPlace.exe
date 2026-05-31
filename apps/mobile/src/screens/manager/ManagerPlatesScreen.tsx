@@ -294,3 +294,38 @@ export function ManagerPlatesScreen() {
             }
 
             await load();
+            setStatusMessage(editingPlateId ? "Plate updated successfully." : "Plate added successfully.");
+            resetForm();
+          });
+        }}
+      />
+      {editingPlateId ? (
+        <ManagerButton label="Cancel edit" variant="secondary" disabled={isBusy} onPress={resetForm} />
+      ) : null}
+
+      <ManagerSectionTitle
+        title="Current plates"
+        subtitle="Tap a card to edit it."
+      />
+      {plates.map((plate) => (
+        <ManagerCard key={plate.id}>
+          <View style={styles.plateRow}>
+            <View style={styles.plateMain}>
+              <View style={styles.thumbWrap}>
+                {plate.imageUrl ? (
+                  <MediaPreview uri={plate.imageUrl} height={72} fallbackText="Plate image unavailable." />
+                ) : (
+                  <View style={styles.thumbFallback}>
+                    <Text style={styles.thumbFallbackText}>No image</Text>
+                  </View>
+                )}
+              </View>
+              <View style={styles.plateText}>
+                <Text style={styles.plateTitle}>{plate.name}</Text>
+                <ManagerInfoText tone="muted">
+                  {`Rating ${plate.averageRating.toFixed(1)} · ${plate.totalReviews} reviews`}
+                </ManagerInfoText>
+                <ManagerInfoText>
+                  Price: {plate.price ? `${plate.price} XAF` : "Not set"}
+                </ManagerInfoText>
+              </View>
