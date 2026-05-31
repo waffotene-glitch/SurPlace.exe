@@ -265,3 +265,35 @@ export function ManagerRestaurantScreen() {
               try {
                 const results = await Location.reverseGeocodeAsync({
                   latitude: currentPosition.coords.latitude,
+                  longitude: currentPosition.coords.longitude,
+                });
+                const readableAddress = formatAddress(results[0] ?? null);
+                if (readableAddress) {
+                  setAddress(readableAddress);
+                }
+              } catch (_reverseGeocodeError) {
+              }
+
+              setLocationMessage("Location selected");
+            });
+          }}
+        />
+        <ManagerInfoText tone={coordinates ? "success" : "muted"}>
+          {coordinates ? "Location selected" : "No location selected yet."}
+        </ManagerInfoText>
+        {locationMessage ? <Text style={styles.locationMessage}>{locationMessage}</Text> : null}
+      </ManagerCard>
+
+      <ErrorText message={activeError} />
+      <ManagerButton
+        label={formTask.isLoading ? "Saving..." : restaurantId ? "Update restaurant" : "Create restaurant"}
+        disabled={isBusy}
+        onPress={() => {
+          if (!token) {
+            return;
+          }
+
+          if (uploadTask.isLoading) {
+            uploadTask.setError("Wait for the cover image upload to finish before saving.");
+            return;
+          }
