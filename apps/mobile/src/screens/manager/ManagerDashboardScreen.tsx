@@ -154,3 +154,21 @@ export function ManagerDashboardScreen() {
                 label={review.verification.isVerifiedOnSite ? "Trusted visit" : "Needs attention"}
                 active
                 tone={review.verification.isVerifiedOnSite ? "success" : "danger"}
+              />
+            </View>
+            {review.targetType === "plate" && review.plate?.name ? (
+              <ManagerInfoText>Plate: {review.plate.name}</ManagerInfoText>
+            ) : null}
+            <Text style={styles.reviewAuthor}>
+              {`${review.user?.fullName || "Anonymous reviewer"} · ${review.rating}/5`}
+            </Text>
+            <ManagerInfoText tone="muted">
+              {`${new Date(review.createdAt).toLocaleDateString()} · ${review.likesCount} likes`}
+            </ManagerInfoText>
+            <Text style={styles.reviewBody}>{review.comment || "No comment added."}</Text>
+            {review.media[0] ? (
+              <MediaPreview
+                uri={review.media[0].thumbnailUrl || review.media[0].url}
+                mediaType={review.media[0].type}
+                height={180}
+                fallbackText="Review media could not be loaded."
