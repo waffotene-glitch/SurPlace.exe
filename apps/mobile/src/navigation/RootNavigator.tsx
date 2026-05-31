@@ -324,3 +324,22 @@ function ManagerNavigator() {
         tabBarActiveTintColor: managerColors.accent,
         tabBarInactiveTintColor: managerColors.textSoft,
         tabBarLabelStyle: {
+          fontWeight: "800",
+          fontSize: 12,
+          marginBottom: 2,
+        },
+        tabBarItemStyle: {
+          paddingVertical: 4,
+        },
+      })}
+    >
+      <ManagerTab.Screen name="Dashboard" component={ManagerDashboardScreen} />
+      <ManagerTab.Screen name="Restaurant" component={ManagerRestaurantScreen} />
+      <ManagerTab.Screen name="Plates" component={ManagerPlatesScreen} />
+      <ManagerTab.Screen name="Profile" component={ProfileScreen} />
+    </ManagerTab.Navigator>
+  );
+}
+
+export function RootNavigator() {
+  const { isLoading, user } = useAuth();
