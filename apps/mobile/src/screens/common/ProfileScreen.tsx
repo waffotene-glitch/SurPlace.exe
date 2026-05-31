@@ -94,3 +94,42 @@ const styles = StyleSheet.create({
     backgroundColor: "#2b2b2b",
     paddingHorizontal: 14,
     paddingVertical: 8,
+  },
+  roleBadgeText: {
+    color: "#f6a27d",
+    fontWeight: "800",
+    fontSize: 12,
+    textTransform: "uppercase",
+    letterSpacing: 0.8,
+  },
+  statsRow: {
+    flexDirection: "row",
+    gap: 12,
+    marginBottom: 14,
+  },
+  statCard: {
+    flex: 1,
+    backgroundColor: "#ffffff",
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: "#ece7de",
+    padding: 16,
+  },
+  statValue: {
+    color: "#18181b",
+    fontSize: 20,
+    fontWeight: "800",
+    marginBottom: 4,
+  },
+  statLabel: {
+    color: "#6b7280",
+    fontSize: 12,
+    fontWeight: "700",
+  },
+  sectionTitle: {
+    color: "#18181b",
+    fontSize: 18,
+    fontWeight: "800",
+    marginBottom: 6,
+  },
+});
