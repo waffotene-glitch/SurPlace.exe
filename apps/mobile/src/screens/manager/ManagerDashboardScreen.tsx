@@ -44,3 +44,22 @@ export function ManagerDashboardScreen() {
             getManagerReviews(token),
           ]);
           setData(dashboardResponse);
+          setAllReviews(reviewsResponse.items);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      void load();
+    }, [token])
+  );
+
+  const filteredReviews = useMemo(() => {
+    let next = [...allReviews];
+
+    if (reviewFilter === "restaurant") {
+      next = next.filter((review) => review.targetType === "restaurant");
+    }
+
+    if (reviewFilter === "plate") {
+      next = next.filter((review) => review.targetType === "plate");
