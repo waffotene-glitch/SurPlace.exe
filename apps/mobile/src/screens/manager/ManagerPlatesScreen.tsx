@@ -363,3 +363,44 @@ export function ManagerPlatesScreen() {
   );
 }
 
+const styles = StyleSheet.create({
+  heroTitle: {
+    color: managerColors.text,
+    fontSize: 24,
+    fontWeight: "800",
+    marginBottom: 8,
+  },
+  previewPlaceholder: {
+    minHeight: 180,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderStyle: "dashed",
+    borderColor: managerColors.borderSoft,
+    backgroundColor: "rgba(255,255,255,0.03)",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
+    marginTop: 14,
+  },
+  previewPlaceholderTitle: {
+    color: managerColors.text,
+    fontSize: 16,
+    fontWeight: "700",
+    marginBottom: 6,
+  },
+  actionRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginBottom: 6,
+  },
+  actionButton: {
+    flex: 1,
+    minWidth: 180,
+    marginRight: 10,
+  },
+  plateRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+  },
+  plateMain: {
