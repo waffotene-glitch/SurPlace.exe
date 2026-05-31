@@ -153,3 +153,22 @@ function UserNavigator() {
         tabBarInactiveTintColor: USER_MUTED,
         tabBarLabelStyle: {
           fontWeight: "800",
+
+const RootStack = createNativeStackNavigator();
+const AuthStack = createNativeStackNavigator();
+const OnboardingStack = createNativeStackNavigator();
+const UserTab = createBottomTabNavigator();
+const UserStack = createNativeStackNavigator();
+const FeedStack = createNativeStackNavigator();
+const ManagerTab = createBottomTabNavigator();
+const USER_ACCENT = "#f26b3a";
+const USER_MUTED = "#8c877c";
+
+function getUserTabIcon(routeName: string, focused: boolean) {
+  const color = focused ? USER_ACCENT : USER_MUTED;
+  const size = focused ? 24 : 22;
+
+  if (routeName === "Discover") {
+    return <Ionicons name={focused ? "compass" : "compass-outline"} size={size} color={color} />;
+  }
+
