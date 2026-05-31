@@ -286,3 +286,22 @@ function UserNavigator() {
         tabBarInactiveTintColor: USER_MUTED,
         tabBarLabelStyle: {
           fontWeight: "800",
+          fontSize: 12,
+          marginBottom: 2,
+        },
+        tabBarStyle: {
+          height: 76,
+          paddingTop: 8,
+          paddingBottom: 10,
+          backgroundColor: "#fffaf5",
+          borderTopColor: "#eadfd4",
+        },
+        tabBarItemStyle: {
+          paddingVertical: 4,
+        },
+      })}
+    >
+      <UserTab.Screen name="Discover" component={HomeStackNavigator} />
+      <UserTab.Screen name="Feed" component={FeedStackNavigator} />
+      <UserTab.Screen name="Profile" component={ProfileScreen} />
+    </UserTab.Navigator>
