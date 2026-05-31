@@ -200,3 +200,28 @@ export function ManagerChip({
         ? managerColors.danger
         : managerColors.accent;
 
+  return (
+    <Pressable
+      disabled={!onPress}
+      onPress={onPress}
+      style={[
+        styles.chip,
+        active
+          ? {
+              backgroundColor: activeColor,
+              borderColor: activeColor,
+            }
+          : null,
+      ]}
+    >
+      <Text style={[styles.chipText, active ? styles.chipTextActive : null]}>{label}</Text>
+    </Pressable>
+  );
+}
+
+export function ManagerInfoText({
+  children,
+  tone = "default",
+}: {
+  children: React.ReactNode;
+  tone?: "default" | "muted" | "success" | "danger";
