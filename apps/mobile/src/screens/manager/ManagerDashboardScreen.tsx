@@ -118,3 +118,21 @@ export function ManagerDashboardScreen() {
         <ManagerChip active={sortMode === "highest"} label="Highest" onPress={() => setSortMode("highest")} />
         <ManagerChip active={sortMode === "lowest"} label="Lowest" onPress={() => setSortMode("lowest")} />
       </FilterRow>
+      <FilterRow>
+        <ManagerChip
+          active={reviewFilter === "all"}
+          label="All reviews"
+          onPress={() => {
+            setReviewFilter("all");
+            setSelectedPlateName(null);
+          }}
+        />
+        <ManagerChip
+          active={reviewFilter === "restaurant"}
+          label="Restaurant"
+          onPress={() => {
+            setReviewFilter("restaurant");
+            setSelectedPlateName(null);
+          }}
+        />
+        <ManagerChip active={reviewFilter === "plate"} label="Plate" onPress={() => setReviewFilter("plate")} />
