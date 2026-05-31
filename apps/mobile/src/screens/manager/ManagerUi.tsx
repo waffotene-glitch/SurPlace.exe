@@ -50,3 +50,28 @@ export function ManagerScreen({
       <View style={styles.content}>{children}</View>
     </SafeAreaView>
   );
+}
+
+export function ManagerHeader({
+  title,
+  subtitle,
+  right,
+}: {
+  title: string;
+  subtitle?: string;
+  right?: React.ReactNode;
+}) {
+  return (
+    <View style={styles.header}>
+      <View style={styles.headerText}>
+        <Text style={styles.headerTitle}>{title}</Text>
+        {subtitle ? <Text style={styles.headerSubtitle}>{subtitle}</Text> : null}
+      </View>
+      {right ? <View style={styles.headerRight}>{right}</View> : null}
+    </View>
+  );
+}
+
+export function ManagerSectionTitle({
+  title,
+  subtitle,
