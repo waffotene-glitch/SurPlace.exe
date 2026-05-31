@@ -67,3 +67,69 @@ export function ReviewCameraScreen({ route, navigation }: { route: any; navigati
             ? "Record one live review video. It will be uploaded only after you submit the review."
             : "Capture one live review photo. It will be uploaded only after you submit the review."}
         </Text>
+
+         <Button
+          label={
+            captureMode === "video"
+              ? isRecording
+                ? "Stop recording"
+                : isCapturing
+                  ? "Preparing video..."
+                  : "Start recording"
+              : isCapturing
+                ? "Capturing..."
+                : "Capture photo"
+          }
+          onPress={() => {
+            void (async () => {
+              if (!cameraRef.current) {
+                return;
+              }
+
+              if (captureMode === "video" && isRecording) {
+                cameraRef.current.stopRecording();
+                return;
+              }
+
+              setIsCapturing(true);
+              try {
+                if (captureMode === "video") {
+                  setIsRecording(true);
+                  const video = await cameraRef.current.recordAsync({ maxDuration: 10 });
+                  if (!video?.uri) {
+                    return;
+                  }
+
+                  if (shouldDiscardRecordingRef.current) {
+                    shouldDiscardRecordingRef.current = false;
+                    navigation.goBack();
+                    return;
+                  }
+
+                  updateDraft({
+                    capturedMediaUri: video.uri,
+                    capturedMediaType: "video",
+                  });
+                  navigation.goBack();
+                  return;
+                }
+
+                const photo = await cameraRef.current.takePictureAsync();
+                if (!photo?.uri) {
+                  return;
+                }
+
+                updateDraft({
+                  capturedMediaUri: photo.uri,
+                  capturedMediaType: "image",
+                });
+                navigation.goBack();
+              } finally {
+                shouldDiscardRecordingRef.current = false;
+                setIsRecording(false);
+                setIsCapturing(false);
+              }
+            })();
+          }}
+          disabled={isCapturing && !isRecording}
+        />
