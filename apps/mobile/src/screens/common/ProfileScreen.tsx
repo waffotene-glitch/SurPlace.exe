@@ -49,3 +49,8 @@ export function ProfileScreen() {
         </Meta>
       </Card>
 
+      <Button label="Logout" variant="danger" onPress={() => void signOut()} />
+    </Screen>
+  );
+}
+
