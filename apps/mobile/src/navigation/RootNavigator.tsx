@@ -305,3 +305,22 @@ function UserNavigator() {
       <UserTab.Screen name="Feed" component={FeedStackNavigator} />
       <UserTab.Screen name="Profile" component={ProfileScreen} />
     </UserTab.Navigator>
+  );
+}
+
+function ManagerNavigator() {
+  return (
+    <ManagerTab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarIcon: ({ focused }) => getManagerTabIcon(route.name, focused),
+        tabBarStyle: {
+          backgroundColor: "#060a17",
+          borderTopColor: "#121c38",
+          paddingTop: 8,
+          paddingBottom: 10,
+          height: 76,
+        },
+        tabBarActiveTintColor: managerColors.accent,
+        tabBarInactiveTintColor: managerColors.textSoft,
+        tabBarLabelStyle: {
