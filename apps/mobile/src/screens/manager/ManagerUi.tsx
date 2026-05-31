@@ -150,3 +150,28 @@ export function ManagerInput({
 export function ManagerButton({
   label,
   onPress,
+  variant = "primary",
+  disabled,
+}: {
+  label: string;
+  onPress: () => void;
+  variant?: "primary" | "secondary" | "ghost" | "danger";
+  disabled?: boolean;
+}) {
+  const buttonStyle =
+    variant === "secondary"
+      ? styles.buttonSecondary
+      : variant === "ghost"
+        ? styles.buttonGhost
+        : variant === "danger"
+          ? styles.buttonDanger
+          : styles.buttonPrimary;
+  const textStyle =
+    variant === "primary" || variant === "danger"
+      ? styles.buttonTextOnAccent
+      : styles.buttonTextDefault;
+
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
