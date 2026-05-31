@@ -136,3 +136,21 @@ export function ManagerDashboardScreen() {
           }}
         />
         <ManagerChip active={reviewFilter === "plate"} label="Plate" onPress={() => setReviewFilter("plate")} />
+      </FilterRow>
+
+      <ManagerSectionTitle
+        title="Review results"
+        subtitle={`${filteredReviews.length} result${filteredReviews.length === 1 ? "" : "s"}`}
+      />
+      {filteredReviews.length ? (
+        filteredReviews.map((review) => (
+          <ManagerCard key={review._id}>
+            <View style={styles.rowBetween}>
+              <Badge
+                label={review.targetType === "plate" ? "Plate Review" : "Restaurant Review"}
+                tone={review.targetType === "plate" ? "warning" : "neutral"}
+              />
+              <ManagerChip
+                label={review.verification.isVerifiedOnSite ? "Trusted visit" : "Needs attention"}
+                active
+                tone={review.verification.isVerifiedOnSite ? "success" : "danger"}
