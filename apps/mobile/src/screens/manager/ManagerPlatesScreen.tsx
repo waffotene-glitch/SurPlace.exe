@@ -84,3 +84,38 @@ export function ManagerPlatesScreen() {
       const result =
         mode === "camera"
           ? await ImagePicker.launchCameraAsync({
+              mediaTypes: ["images"],
+              allowsEditing: true,
+              aspect: [4, 3],
+              quality: 0.8,
+            })
+          : await ImagePicker.launchImageLibraryAsync({
+              mediaTypes: ["images"],
+              allowsEditing: true,
+              aspect: [4, 3],
+              quality: 0.8,
+            });
+
+      if (result.canceled || !result.assets?.[0]?.uri) {
+        return;
+      }
+
+      const pickedUri = result.assets[0].uri;
+      setLocalImagePreviewUri(pickedUri);
+      setUploadStatus("Uploading image...");
+
+      try {
+        const uploadedUrl = await uploadTask.run(() =>
+          uploadManagerPlateImage({
+            uri: pickedUri,
+          })
+        );
+        setImageUrl(uploadedUrl);
+        setLocalImagePreviewUri(uploadedUrl);
+        setUploadStatus("Upload complete");
+      } catch (uploadError) {
+        setUploadStatus(null);
+        setLocalImagePreviewUri(null);
+        throw uploadError;
+      }
+    },
