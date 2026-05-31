@@ -54,3 +54,43 @@ export function ProfileScreen() {
   );
 }
 
+const styles = StyleSheet.create({
+  heroCard: {
+    backgroundColor: "#171717",
+    borderRadius: 24,
+    padding: 22,
+    alignItems: "center",
+    marginBottom: 14,
+  },
+  avatar: {
+    width: 78,
+    height: 78,
+    borderRadius: 39,
+    backgroundColor: "#f26b3a",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 14,
+  },
+  avatarText: {
+    color: "#ffffff",
+    fontSize: 28,
+    fontWeight: "800",
+  },
+  name: {
+    color: "#ffffff",
+    fontSize: 24,
+    fontWeight: "800",
+    marginBottom: 6,
+    textAlign: "center",
+  },
+  email: {
+    color: "#d4d4d8",
+    fontSize: 14,
+    marginBottom: 12,
+    textAlign: "center",
+  },
+  roleBadge: {
+    borderRadius: 999,
+    backgroundColor: "#2b2b2b",
+    paddingHorizontal: 14,
+    paddingVertical: 8,
