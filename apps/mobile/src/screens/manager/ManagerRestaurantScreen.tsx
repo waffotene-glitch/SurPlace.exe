@@ -233,3 +233,35 @@ export function ManagerRestaurantScreen() {
           />
         ) : null}
         <ManagerLabel>Cuisine tags (comma separated)</ManagerLabel>
+        <ManagerInput value={cuisineTags} onChangeText={setCuisineTags} placeholder="Grill, Local, Seafood" />
+      </ManagerCard>
+
+      <ManagerSectionTitle
+        title="Location"
+        subtitle="Choose where guests can find you."
+      />
+      <ManagerCard>
+        <ManagerLabel>Address</ManagerLabel>
+        <ManagerInput value={address} onChangeText={setAddress} placeholder="Restaurant address" />
+        <ManagerButton
+          label="Use my current location"
+          variant="secondary"
+          disabled={isBusy}
+          onPress={() => {
+            void formTask.run(async () => {
+              const permission = await Location.requestForegroundPermissionsAsync();
+              if (permission.status !== "granted") {
+                setLocationMessage("Location permission was denied.");
+                return;
+              }
+
+              const currentPosition = await Location.getCurrentPositionAsync({});
+              const nextCoordinates: [number, number] = [
+                currentPosition.coords.longitude,
+                currentPosition.coords.latitude,
+              ];
+              setCoordinates(nextCoordinates);
+
+              try {
+                const results = await Location.reverseGeocodeAsync({
+                  latitude: currentPosition.coords.latitude,
