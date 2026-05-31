@@ -169,3 +169,35 @@ export function ManagerRestaurantScreen() {
         {uploadStatus ? <ManagerInfoText tone="muted">{uploadStatus}</ManagerInfoText> : null}
       </ManagerCard>
 
+      <ManagerSectionTitle
+        title="Restaurant details"
+        subtitle="Update the information guests will see."
+      />
+      <ManagerCard>
+        <ManagerLabel>Restaurant name</ManagerLabel>
+        <ManagerInput value={name} onChangeText={setName} placeholder="Restaurant name" />
+        <ManagerLabel>Description</ManagerLabel>
+        <ManagerInput value={description} onChangeText={setDescription} multiline placeholder="Describe the restaurant" />
+        <ManagerLabel>Cover image</ManagerLabel>
+        <View style={styles.actionRow}>
+          <View style={styles.actionButton}>
+            <ManagerButton
+              label={uploadTask.isLoading ? "Uploading..." : "Take photo"}
+              variant="secondary"
+              disabled={isBusy}
+              onPress={() => {
+                void startCoverImageSelection("camera").catch((selectionError) => {
+                  Alert.alert(
+                    "Restaurant cover image",
+                    selectionError instanceof Error
+                      ? selectionError.message
+                      : "Unable to capture a restaurant cover image."
+                  );
+                });
+              }}
+            />
+          </View>
+          <View style={styles.actionButton}>
+            <ManagerButton
+              label={uploadTask.isLoading ? "Uploading..." : "Choose from gallery"}
+              variant="secondary"
