@@ -23,3 +23,39 @@ export function HomeScreen({ navigation }: { navigation: any }) {
         setIsLoading(false);
       }
     };
+
+     void load();
+  }, []);
+
+  const restaurantNameById = useMemo(
+    () => Object.fromEntries(restaurants.map((restaurant) => [restaurant.id, restaurant.name])),
+    [restaurants]
+  );
+
+  const filteredRestaurants = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) {
+      return restaurants;
+    }
+
+    return restaurants.filter((restaurant) =>
+      [restaurant.name, restaurant.description, restaurant.location.address]
+        .join(" ")
+        .toLowerCase()
+        .includes(q)
+    );
+  }, [restaurants, search]);
+
+  const filteredPlates = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) {
+      return plates;
+    }
+
+    return plates.filter((plate) =>
+      [plate.name, plate.description, restaurantNameById[plate.restaurant] || ""]
+        .join(" ")
+        .toLowerCase()
+        .includes(q)
+    );
+  }, [plates, restaurantNameById, search]);
