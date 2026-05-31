@@ -172,3 +172,22 @@ function getUserTabIcon(routeName: string, focused: boolean) {
     return <Ionicons name={focused ? "compass" : "compass-outline"} size={size} color={color} />;
   }
 
+  if (routeName === "Feed") {
+    return <Ionicons name={focused ? "play-circle" : "play-circle-outline"} size={size} color={color} />;
+  }
+
+  return <Ionicons name={focused ? "person-circle" : "person-circle-outline"} size={size} color={color} />;
+}
+
+function getManagerTabIcon(routeName: string, focused: boolean) {
+  const color = focused ? managerColors.accent : managerColors.textSoft;
+  const size = focused ? 24 : 22;
+
+  if (routeName === "Dashboard") {
+    return <Ionicons name={focused ? "grid" : "grid-outline"} size={size} color={color} />;
+  }
+
+  if (routeName === "Restaurant") {
+    return <Ionicons name={focused ? "storefront" : "storefront-outline"} size={size} color={color} />;
+  }
+
