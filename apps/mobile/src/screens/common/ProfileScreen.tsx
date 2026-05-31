@@ -24,3 +24,8 @@ export function ProfileScreen() {
         </View>
         <Text style={styles.name}>{user?.fullName || "User"}</Text>
         <Text style={styles.email}>{user?.email}</Text>
+        <View style={styles.roleBadge}>
+          <Text style={styles.roleBadgeText}>{user?.role === "manager" ? "Manager" : "Foodie"}</Text>
+        </View>
+      </View>
+
