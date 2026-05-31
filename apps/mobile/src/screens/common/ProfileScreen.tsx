@@ -19,3 +19,8 @@ export function ProfileScreen() {
     <Screen scroll>
       <Title subtitle="Your account details and access stay exactly the same.">Profile</Title>
       <View style={styles.heroCard}>
+        <View style={styles.avatar}>
+          <Text style={styles.avatarText}>{initials}</Text>
+        </View>
+        <Text style={styles.name}>{user?.fullName || "User"}</Text>
+        <Text style={styles.email}>{user?.email}</Text>
