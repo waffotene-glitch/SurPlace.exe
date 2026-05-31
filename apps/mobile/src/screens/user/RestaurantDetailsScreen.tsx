@@ -126,3 +126,30 @@ export function RestaurantDetailsScreen({ route, navigation }: { route: any; nav
             }
             style={{ marginTop: 12 }}
           >
+            <Text style={{ color: "#1f6f5f", fontWeight: "700" }}>Open plate</Text>
+          </Pressable>
+        </Card>
+      ))}
+      <Text style={{ marginVertical: 10, fontWeight: "700", fontSize: 18 }}>Reviews</Text>
+      {data.recentReviews.map((review) => (
+        <Card key={review._id}>
+          <Badge
+            label={review.targetType === "plate" ? "Plate Review" : "Restaurant Review"}
+            tone={review.targetType === "plate" ? "warning" : "neutral"}
+          />
+          <CardTitle>{review.plate?.name || data.restaurant.name}</CardTitle>
+          <Meta>
+            {review.user?.fullName} - Rating {review.rating}/5 - {review.likesCount} likes
+          </Meta>
+          <MediaPreview
+            uri={review.media[0]?.url}
+            mediaType={review.media[0]?.type}
+            fallbackText="Review media is unavailable for this restaurant review."
+          />
+          <Text style={{ marginTop: 8 }}>{review.comment || "No comment added."}</Text>
+        </Card>
+      ))}
+    </Screen>
+  );
+}
+
