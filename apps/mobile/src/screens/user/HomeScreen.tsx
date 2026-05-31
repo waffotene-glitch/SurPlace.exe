@@ -90,3 +90,52 @@ export function HomeScreen({ navigation }: { navigation: any }) {
             }
             style={{ width: 280, marginRight: 12 }}
           >
+            <Card>
+              {restaurant.coverImageUrl ? (
+                <Image
+                  source={{ uri: restaurant.coverImageUrl }}
+                  style={{ width: "100%", height: 140, borderRadius: 14, marginBottom: 10 }}
+                />
+              ) : null}
+              <Text style={{ fontSize: 18, fontWeight: "700", color: "#232323" }}>
+                {restaurant.name}
+              </Text>
+              <Meta>
+                Rating {restaurant.averageRating.toFixed(1)} - {restaurant.totalReviews} reviews
+              </Meta>
+              <Meta>{restaurant.location.address}</Meta>
+            </Card>
+          </Pressable>
+        ))}
+      </ScrollView>
+
+      <Text style={{ marginBottom: 10, fontWeight: "700", fontSize: 18 }}>Plates</Text>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {filteredPlates.map((plate) => (
+          <Pressable
+            key={plate.id}
+            onPress={() =>
+              navigation.navigate("PlateDetails", {
+                plateId: plate.id,
+                plateName: plate.name,
+                restaurantId: plate.restaurant,
+                restaurantName: restaurantNameById[plate.restaurant],
+              })
+            }
+            style={{ width: 280, marginRight: 12 }}
+          >
+            <Card>
+              {plate.imageUrl ? (
+                <Image
+                  source={{ uri: plate.imageUrl }}
+                  style={{ width: "100%", height: 140, borderRadius: 14, marginBottom: 10 }}
+                />
+              ) : null}
+              <Text style={{ fontSize: 18, fontWeight: "700", color: "#232323" }}>{plate.name}</Text>
+              <Meta>{restaurantNameById[plate.restaurant] || "Restaurant"}</Meta>
+              <Meta>
+                Rating {plate.averageRating.toFixed(1)} - {plate.totalReviews} reviews
+              </Meta>
+            </Card>
+          </Pressable>
+        ))}
