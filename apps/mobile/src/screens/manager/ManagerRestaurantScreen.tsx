@@ -73,3 +73,35 @@ export function ManagerRestaurantScreen() {
         } catch (_loadError) {
           setRestaurantId(null);
         }
+      };
+
+      void load();
+    }, [token])
+  );
+
+  const startCoverImageSelection = useCallback(
+    async (mode: "camera" | "gallery") => {
+      const permission =
+        mode === "camera"
+          ? await ImagePicker.requestCameraPermissionsAsync()
+          : await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (permission.status !== "granted") {
+        throw new Error(
+          mode === "camera"
+            ? "Camera permission is required to take a restaurant cover photo."
+            : "Photo library permission is required to select a restaurant cover image."
+        );
+      }
+
+      const result =
+        mode === "camera"
+          ? await ImagePicker.launchCameraAsync({
+              mediaTypes: ["images"],
+              allowsEditing: true,
+              aspect: [4, 3],
+              quality: 0.8,
+            })
+          : await ImagePicker.launchImageLibraryAsync({
+              mediaTypes: ["images"],
+              allowsEditing: true,
