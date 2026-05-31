@@ -346,3 +346,100 @@ const styles = StyleSheet.create({
     color: managerColors.textSoft,
     fontSize: 12,
     marginTop: 6,
+  },
+  label: {
+    color: "#e0e5f2",
+    fontSize: 13,
+    fontWeight: "700",
+    marginBottom: 8,
+  },
+  input: {
+    minHeight: 52,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: managerColors.border,
+    backgroundColor: managerColors.surface,
+    color: managerColors.text,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    fontSize: 15,
+    marginBottom: 14,
+  },
+  inputMultiline: {
+    minHeight: 110,
+  },
+  inputLocked: {
+    color: managerColors.textMuted,
+  },
+  buttonBase: {
+    minHeight: 50,
+    borderRadius: 14,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 16,
+    marginBottom: 10,
+  },
+  buttonPrimary: {
+    backgroundColor: managerColors.accent,
+  },
+  buttonSecondary: {
+    backgroundColor: managerColors.surfaceMuted,
+    borderWidth: 1,
+    borderColor: managerColors.borderSoft,
+  },
+  buttonGhost: {
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: managerColors.border,
+  },
+  buttonDanger: {
+    backgroundColor: "#cf3d3d",
+  },
+  buttonDisabled: {
+    opacity: 0.6,
+  },
+  buttonTextOnAccent: {
+    color: managerColors.text,
+    fontSize: 15,
+    fontWeight: "800",
+  },
+  buttonTextDefault: {
+    color: managerColors.textMuted,
+    fontSize: 15,
+    fontWeight: "700",
+  },
+  chip: {
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: managerColors.borderSoft,
+    backgroundColor: managerColors.surface,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    marginRight: 8,
+    marginBottom: 8,
+  },
+  chipText: {
+    color: managerColors.textMuted,
+    fontWeight: "700",
+    fontSize: 12,
+  },
+  chipTextActive: {
+    color: managerColors.text,
+  },
+  infoText: {
+    fontSize: 13,
+    lineHeight: 19,
+    marginTop: 4,
+  },
+  loadingWrap: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 24,
+  },
+  loadingText: {
+    color: managerColors.textMuted,
+    marginTop: 14,
+    textAlign: "center",
+  },
+});
