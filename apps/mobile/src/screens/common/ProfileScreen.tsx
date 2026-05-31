@@ -34,3 +34,8 @@ export function ProfileScreen() {
           <Text style={styles.statValue}>{user?.role === "manager" ? "Pro" : "User"}</Text>
           <Text style={styles.statLabel}>Account type</Text>
         </View>
+        <View style={styles.statCard}>
+          <Text style={styles.statValue}>{user?.managedRestaurant ? "Yes" : "No"}</Text>
+          <Text style={styles.statLabel}>Restaurant linked</Text>
+        </View>
+      </View>
