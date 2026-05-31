@@ -328,3 +328,26 @@ export function ManagerRestaurantScreen() {
   );
 }
 
+const styles = StyleSheet.create({
+  heroTitle: {
+    color: managerColors.text,
+    fontSize: 24,
+    fontWeight: "800",
+    marginBottom: 8,
+  },
+  chipRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginTop: 14,
+    marginBottom: 14,
+  },
+  previewPlaceholder: {
+    minHeight: 190,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderStyle: "dashed",
+    borderColor: managerColors.borderSoft,
+    backgroundColor: "rgba(255,255,255,0.03)",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
