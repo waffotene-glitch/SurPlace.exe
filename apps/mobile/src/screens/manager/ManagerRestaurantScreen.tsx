@@ -297,3 +297,34 @@ export function ManagerRestaurantScreen() {
             uploadTask.setError("Wait for the cover image upload to finish before saving.");
             return;
           }
+
+          void formTask.run(async () => {
+            if (!coordinates) {
+              throw new Error("Use your current location before saving the restaurant");
+            }
+
+            await saveManagerRestaurant(
+              token,
+              {
+                name,
+                description,
+                coverImageUrl,
+                cuisineTags: cuisineTags
+                  .split(",")
+                  .map((item) => item.trim())
+                  .filter(Boolean),
+                location: {
+                  address,
+                  coordinates,
+                },
+              },
+              restaurantId ? "PUT" : "POST"
+            );
+            await refreshProfile();
+          });
+        }}
+      />
+    </ManagerScreen>
+  );
+}
+
