@@ -119,3 +119,38 @@ export function ManagerPlatesScreen() {
         throw uploadError;
       }
     },
+    [uploadTask]
+  );
+
+  const confirmDeletePlate = useCallback(
+    (plate: Plate) => {
+      if (!token) {
+        return;
+      }
+
+      Alert.alert("Delete this plate?", "This action cannot be undone.", [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => {
+            void deleteTask
+              .run(async () => {
+                await deleteManagerPlate(token, plate.id);
+                setPlates((currentPlates) => currentPlates.filter((item) => item.id !== plate.id));
+                if (editingPlateId === plate.id) {
+                  resetForm();
+                }
+                setStatusMessage(`"${plate.name}" deleted successfully.`);
+                Alert.alert("Success", "Plate deleted successfully.");
+              })
+              .catch((deleteError) => {
+                Alert.alert(
+                  "Delete failed",
+                  deleteError instanceof Error
+                    ? deleteError.message
+                    : "Unable to delete this plate right now."
+                );
