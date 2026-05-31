@@ -14,3 +14,8 @@ export function ProfileScreen() {
         .join("") || "U"
     );
   }, [user?.fullName]);
+
+  return (
+    <Screen scroll>
+      <Title subtitle="Your account details and access stay exactly the same.">Profile</Title>
+      <View style={styles.heroCard}>
