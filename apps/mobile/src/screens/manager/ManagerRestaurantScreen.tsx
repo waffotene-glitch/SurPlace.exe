@@ -351,3 +351,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
+  },
+  previewPlaceholderTitle: {
+    color: managerColors.text,
+    fontSize: 16,
+    fontWeight: "700",
+    marginBottom: 6,
+  },
+  actionRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginBottom: 6,
+  },
+  actionButton: {
+    flex: 1,
+    minWidth: 180,
+    marginRight: 10,
+  },
+  locationMessage: {
+    marginTop: 8,
+    color: managerColors.textMuted,
+  },
+});
