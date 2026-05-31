@@ -79,3 +79,47 @@ export function ReviewCreateScreen({ route, navigation }: { route: any; navigati
           { label: "5", value: "5" },
         ]}
       />
+
+      <Field
+        label="Comment"
+        value={draft.comment}
+        onChangeText={(value) => updateDraft({ comment: value })}
+        placeholder="What did you think about the food and service?"
+        multiline
+      />
+      <Button
+        label={draft.capturedMediaType === "image" ? "Replace live photo" : "Take live photo"}
+        variant="secondary"
+        onPress={() => navigation.navigate("ReviewCamera", { captureMode: "image" })}
+      />
+      <Button
+        label={draft.capturedMediaType === "video" ? "Replace live video" : "Record live video"}
+        variant="secondary"
+        onPress={() => navigation.navigate("ReviewCamera", { captureMode: "video" })}
+      />
+      {draft.capturedMediaUri ? (
+        <View style={{ marginBottom: 16 }}>
+          {draft.capturedMediaType === "image" ? (
+            <Image
+              source={{ uri: draft.capturedMediaUri }}
+              style={{ width: "100%", height: 220, borderRadius: 16 }}
+            />
+          ) : (
+            <Video
+              source={{ uri: draft.capturedMediaUri }}
+              style={{ width: "100%", height: 200, borderRadius: 16, backgroundColor: "#111111" }}
+              useNativeControls
+              resizeMode={ResizeMode.COVER}
+            />
+          )}
+          <Meta>
+            {draft.capturedMediaType === "video"
+              ? "One live video selected for this review."
+              : "One live photo selected for this review."}
+          </Meta>
+          <Button
+            label="Remove selected media"
+            variant="secondary"
+            onPress={() => updateDraft({ capturedMediaUri: null, capturedMediaType: null })}
+          />
+        </View>
