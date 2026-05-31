@@ -77,3 +77,22 @@ function AuthNavigator() {
 function OnboardingNavigator({ onComplete }: { onComplete: () => void }) {
   return (
     <OnboardingStack.Navigator screenOptions={{ headerShown: false }}>
+      <OnboardingStack.Screen name="OnboardingIntro">
+        {(props) => <OnboardingIntroScreen {...props} onSkip={onComplete} />}
+      </OnboardingStack.Screen>
+      <OnboardingStack.Screen name="OnboardingVisualMenus">
+        {(props) => <OnboardingVisualMenusScreen {...props} onComplete={onComplete} />}
+      </OnboardingStack.Screen>
+    </OnboardingStack.Navigator>
+  );
+}
+
+function HomeStackNavigator() {
+  return (
+    <UserStack.Navigator>
+      <UserStack.Screen name="HomeMain" component={HomeScreen} options={{ title: "Home" }} />
+      <UserStack.Screen
+        name="RestaurantDetails"
+        component={RestaurantDetailsScreen}
+        options={{ title: "Restaurant" }}
+      />
