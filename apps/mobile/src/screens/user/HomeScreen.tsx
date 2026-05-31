@@ -139,3 +139,12 @@ export function HomeScreen({ navigation }: { navigation: any }) {
             </Card>
           </Pressable>
         ))}
+            </ScrollView>
+      {!filteredRestaurants.length && !filteredPlates.length ? (
+        <View style={{ marginTop: 20 }}>
+          <Text style={{ color: "#5f5f5f" }}>No restaurants or plates match this search.</Text>
+        </View>
+      ) : null}
+    </Screen>
+  );
+}
