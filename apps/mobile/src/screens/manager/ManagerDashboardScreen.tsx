@@ -172,3 +172,21 @@ export function ManagerDashboardScreen() {
                 mediaType={review.media[0].type}
                 height={180}
                 fallbackText="Review media could not be loaded."
+              />
+            ) : null}
+          </ManagerCard>
+        ))
+      ) : (
+        <EmptyState
+          title="No reviews match this filter"
+          body="Try another filter or clear the selected plate."
+        />
+      )}
+    </ManagerScreen>
+  );
+}
+
+function FilterRow({ children }: { children: React.ReactNode }) {
+  return <View style={styles.filterRow}>{children}</View>;
+}
+
