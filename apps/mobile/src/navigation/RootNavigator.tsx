@@ -115,3 +115,22 @@ function HomeStackNavigator() {
   );
 }
 
+function FeedStackNavigator() {
+  return (
+    <FeedStack.Navigator>
+      <FeedStack.Screen name="FeedMain" component={FeedScreen} options={{ title: "Feed" }} />
+      <FeedStack.Screen
+        name="RestaurantDetails"
+        component={RestaurantDetailsScreen}
+        options={{ title: "Restaurant" }}
+      />
+      <FeedStack.Screen
+        name="PlateDetails"
+        component={PlateDetailsScreen}
+        options={{ title: "Plate" }}
+      />
+      <FeedStack.Screen
+        name="ReviewCreate"
+        component={ReviewCreateScreen}
+        options={{ title: "Write Review" }}
+      />
