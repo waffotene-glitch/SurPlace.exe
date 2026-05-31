@@ -75,3 +75,28 @@ export function ManagerHeader({
 export function ManagerSectionTitle({
   title,
   subtitle,
+}: {
+  title: string;
+  subtitle?: string;
+}) {
+  return (
+    <View style={styles.sectionHeader}>
+      <Text style={styles.sectionTitle}>{title}</Text>
+      {subtitle ? <Text style={styles.sectionSubtitle}>{subtitle}</Text> : null}
+    </View>
+  );
+}
+
+export function ManagerCard({
+  children,
+  accent = false,
+}: {
+  children: React.ReactNode;
+  accent?: boolean;
+}) {
+  return <View style={[styles.card, accent ? styles.cardAccent : null]}>{children}</View>;
+}
+
+export function ManagerMetric({
+  label,
+  value,
