@@ -30,3 +30,34 @@ export function RestaurantDetailsScreen({ route, navigation }: { route: any; nav
           }
         }
       };
+
+      void load();
+
+      return () => {
+        isActive = false;
+      };
+    }, [restaurantId])
+  );
+
+  useEffect(() => {
+    if (refreshToken === 0) {
+      return;
+    }
+
+    let isActive = true;
+
+    const load = async () => {
+      setIsLoading(true);
+      try {
+        const response = await getRestaurantDetails(restaurantId);
+
+        if (isActive) {
+          setData(response);
+        }
+      } finally {
+        if (isActive) {
+          setIsLoading(false);
+        }
+      }
+    };
+
