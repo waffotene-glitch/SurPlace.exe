@@ -29,3 +29,23 @@ export function ReviewCameraScreen({ route, navigation }: { route: any; navigati
       </Screen>
     );
   }
+  
+  if (!permission.granted) {
+    return (
+      <Screen>
+        <Title subtitle="Camera access is needed for live review capture.">Camera Permission</Title>
+        <Button label="Allow camera" onPress={() => void requestPermission()} />
+      </Screen>
+    );
+  }
+
+  if (captureMode === "video" && !microphonePermission?.granted) {
+    return (
+      <Screen>
+        <Title subtitle="Microphone access is needed to record a live review video.">
+          Microphone Permission
+        </Title>
+        <Button label="Allow microphone" onPress={() => void requestMicrophonePermission()} />
+      </Screen>
+    );
+  }
