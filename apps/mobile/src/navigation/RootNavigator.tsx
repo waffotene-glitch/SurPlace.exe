@@ -343,3 +343,22 @@ function ManagerNavigator() {
 
 export function RootNavigator() {
   const { isLoading, user } = useAuth();
+  const [hasSeenOnboarding, setHasSeenOnboardingState] = useState<boolean | null>(null);
+
+  const loadOnboardingFlag = async () => {
+    const seen = await getHasSeenOnboarding();
+    setHasSeenOnboardingState(seen);
+  };
+
+  useEffect(() => {
+    void loadOnboardingFlag();
+  }, [user]);
+
+  const completeOnboarding = async () => {
+    await setHasSeenOnboarding(true);
+    setHasSeenOnboardingState(true);
+  };
+
+  if (isLoading || hasSeenOnboarding === null) {
+    return <LoadingState label="Restoring session..." />;
+  }
