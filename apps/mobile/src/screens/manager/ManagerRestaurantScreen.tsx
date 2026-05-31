@@ -137,3 +137,35 @@ export function ManagerRestaurantScreen() {
 
   const activeError = uploadTask.error || formTask.error;
   const activePreviewUri = localCoverPreviewUri || coverImageUrl;
+  const isBusy = uploadTask.isLoading || formTask.isLoading;
+
+  return (
+    <ManagerScreen scroll>
+      <ManagerHeader
+        title="Manage your restaurant"
+        subtitle="Keep your details up to date."
+      />
+
+      <ManagerCard accent>
+        <Text style={styles.heroTitle}>{name || "Your restaurant"}</Text>
+        <View style={styles.chipRow}>
+          <ManagerChip label={restaurantId ? "Existing restaurant" : "New restaurant"} active />
+          <ManagerChip
+            label={coordinates ? "Location selected" : "Location missing"}
+            active={!!coordinates}
+            tone={coordinates ? "success" : "danger"}
+          />
+        </View>
+        {activePreviewUri?.trim() ? (
+          <MediaPreview uri={activePreviewUri} height={190} fallbackText="Cover image preview is unavailable." />
+        ) : (
+          <View style={styles.previewPlaceholder}>
+            <Text style={styles.previewPlaceholderTitle}>Cover image preview</Text>
+            <ManagerInfoText tone="muted">
+              Add a cover image for your restaurant.
+            </ManagerInfoText>
+          </View>
+        )}
+        {uploadStatus ? <ManagerInfoText tone="muted">{uploadStatus}</ManagerInfoText> : null}
+      </ManagerCard>
+
