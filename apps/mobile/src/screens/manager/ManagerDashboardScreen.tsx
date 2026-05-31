@@ -212,3 +212,24 @@ const styles = StyleSheet.create({
   },
   filterRow: {
     flexDirection: "row",
+    flexWrap: "wrap",
+    marginBottom: 8,
+  },
+  rowBetween: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  reviewAuthor: {
+    color: managerColors.text,
+    fontSize: 15,
+    fontWeight: "700",
+    marginTop: 12,
+  },
+  reviewBody: {
+    color: "#e0e5f2",
+    fontSize: 14,
+    lineHeight: 21,
+    marginTop: 10,
+  },
+});
