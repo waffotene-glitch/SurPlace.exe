@@ -44,3 +44,8 @@ export function ProfileScreen() {
         <Text style={styles.sectionTitle}>Account</Text>
         <Meta>Email: {user?.email}</Meta>
         <Meta>Role: {user?.role}</Meta>
+        <Meta>
+          Restaurant access: {user?.managedRestaurant ? "Linked to a managed restaurant" : "No linked restaurant"}
+        </Meta>
+      </Card>
+
