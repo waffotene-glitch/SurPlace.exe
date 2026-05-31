@@ -224,3 +224,38 @@ export function ManagerPlatesScreen() {
           <View style={styles.actionButton}>
             <ManagerButton
               label={uploadTask.isLoading ? "Uploading..." : "Choose from gallery"}
+              variant="secondary"
+              disabled={isBusy}
+              onPress={() => {
+                void startImageSelection("gallery").catch((selectionError) => {
+                  Alert.alert(
+                    "Plate image",
+                    selectionError instanceof Error
+                      ? selectionError.message
+                      : "Unable to select a plate image."
+                  );
+                });
+              }}
+            />
+          </View>
+        </View>
+        {imageUrl ? (
+          <ManagerInfoText tone="success">Media ready</ManagerInfoText>
+        ) : (
+          <ManagerInfoText tone="muted">No image yet.</ManagerInfoText>
+        )}
+        {imageUrl ? (
+          <ManagerButton
+            label="Remove selected image"
+            variant="ghost"
+            disabled={isBusy}
+            onPress={() => {
+              setImageUrl("");
+              setLocalImagePreviewUri(null);
+              setUploadStatus(null);
+            }}
+          />
+        ) : null}
+        <ManagerLabel>Price</ManagerLabel>
+        <ManagerInput value={price} onChangeText={setPrice} placeholder="4500" />
+      </ManagerCard>
