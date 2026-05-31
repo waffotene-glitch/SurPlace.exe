@@ -267,3 +267,22 @@ function FeedStackNavigator() {
         component={ReviewCreateScreen}
         options={{ title: "Write Review" }}
       />
+      <FeedStack.Screen
+        name="ReviewCamera"
+        component={ReviewCameraScreen}
+        options={{ headerShown: false, presentation: "modal" }}
+      />
+    </FeedStack.Navigator>
+  );
+}
+
+function UserNavigator() {
+  return (
+    <UserTab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarIcon: ({ focused }) => getUserTabIcon(route.name, focused),
+        tabBarActiveTintColor: USER_ACCENT,
+        tabBarInactiveTintColor: USER_MUTED,
+        tabBarLabelStyle: {
+          fontWeight: "800",
