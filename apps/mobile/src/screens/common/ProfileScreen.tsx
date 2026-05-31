@@ -39,3 +39,8 @@ export function ProfileScreen() {
           <Text style={styles.statLabel}>Restaurant linked</Text>
         </View>
       </View>
+
+      <Card>
+        <Text style={styles.sectionTitle}>Account</Text>
+        <Meta>Email: {user?.email}</Meta>
+        <Meta>Role: {user?.role}</Meta>
