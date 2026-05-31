@@ -10,3 +10,19 @@ import { useReviewRefresh } from "../../context/ReviewRefreshContext";
 import { ENFORCE_LOCATION_VERIFICATION } from "../../config/api";
 import { createReview } from "../../services/appApi";
 import { uploadReviewMedia } from "../../services/uploadApi";
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string) {
+  return new Promise<T>((resolve, reject) => {
+    const timeoutId = setTimeout(() => reject(new Error(message)), timeoutMs);
+
+    promise
+      .then((value) => {
+        clearTimeout(timeoutId);
+        resolve(value);
+      })
+      .catch((error) => {
+        clearTimeout(timeoutId);
+        reject(error);
+      });
+  });
+}
