@@ -100,3 +100,21 @@ export function ManagerDashboardScreen() {
           <ManagerMetric label="Reviews" value={String(allReviews.length)} />
         </View>
         <ManagerButton
+          label="Restaurant reviews"
+          variant="secondary"
+          onPress={() => {
+            setReviewFilter("restaurant");
+            setSelectedPlateName(null);
+          }}
+        />
+      </ManagerCard>
+
+      <ManagerSectionTitle
+        title="Review filters"
+        subtitle={selectedPlateName ? selectedPlateName : "Choose which reviews to see."}
+      />
+      <FilterRow>
+        <ManagerChip active={sortMode === "newest"} label="Newest" onPress={() => setSortMode("newest")} />
+        <ManagerChip active={sortMode === "highest"} label="Highest" onPress={() => setSortMode("highest")} />
+        <ManagerChip active={sortMode === "lowest"} label="Lowest" onPress={() => setSortMode("lowest")} />
+      </FilterRow>
