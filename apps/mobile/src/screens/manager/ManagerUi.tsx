@@ -125,3 +125,28 @@ export function ManagerInput({
 }: {
   value: string;
   onChangeText: (value: string) => void;
+  placeholder?: string;
+  multiline?: boolean;
+  editable?: boolean;
+}) {
+  return (
+    <TextInput
+      value={value}
+      onChangeText={onChangeText}
+      placeholder={placeholder}
+      placeholderTextColor={managerColors.textSoft}
+      multiline={multiline}
+      editable={editable}
+      style={[
+        styles.input,
+        multiline ? styles.inputMultiline : null,
+        !editable ? styles.inputLocked : null,
+      ]}
+      textAlignVertical={multiline ? "top" : "center"}
+    />
+  );
+}
+
+export function ManagerButton({
+  label,
+  onPress,
