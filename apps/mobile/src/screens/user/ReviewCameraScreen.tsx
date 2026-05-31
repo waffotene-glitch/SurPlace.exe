@@ -133,3 +133,20 @@ export function ReviewCameraScreen({ route, navigation }: { route: any; navigati
           }}
           disabled={isCapturing && !isRecording}
         />
+        <Button
+          label="Cancel"
+          variant="secondary"
+          onPress={() => {
+            if (captureMode === "video" && isRecording && cameraRef.current) {
+              shouldDiscardRecordingRef.current = true;
+              cameraRef.current.stopRecording();
+              return;
+            }
+
+            navigation.goBack();
+          }}
+        />
+      </View>
+    </View>
+  );
+}
