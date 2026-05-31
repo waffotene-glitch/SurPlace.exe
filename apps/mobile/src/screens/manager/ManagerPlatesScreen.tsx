@@ -404,3 +404,43 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   plateMain: {
+    flex: 1,
+    flexDirection: "row",
+    paddingRight: 10,
+  },
+  thumbWrap: {
+    width: 72,
+    marginRight: 14,
+  },
+  thumbFallback: {
+    width: 72,
+    height: 72,
+    borderRadius: 14,
+    backgroundColor: managerColors.surfaceMuted,
+    borderWidth: 1,
+    borderColor: managerColors.borderSoft,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  thumbFallbackText: {
+    color: managerColors.textSoft,
+    fontSize: 11,
+    fontWeight: "700",
+  },
+  plateText: {
+    flex: 1,
+  },
+  plateTitle: {
+    color: managerColors.text,
+    fontSize: 17,
+    fontWeight: "800",
+    marginBottom: 4,
+  },
+  plateDescription: {
+    color: "#e0e5f2",
+    fontSize: 14,
+    lineHeight: 21,
+    marginTop: 12,
+    marginBottom: 8,
+  },
+});
