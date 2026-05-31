@@ -329,3 +329,37 @@ export function ManagerPlatesScreen() {
                   Price: {plate.price ? `${plate.price} XAF` : "Not set"}
                 </ManagerInfoText>
               </View>
+            </View>
+            <ManagerChip label="Edit" active />
+          </View>
+          <Text style={styles.plateDescription}>{plate.description || "No description added yet."}</Text>
+          <ManagerButton
+            label="Load plate into editor"
+            variant="ghost"
+            disabled={isBusy}
+            onPress={() => {
+              setEditingPlateId(plate.id);
+              setName(plate.name);
+              setDescription(plate.description);
+              setImageUrl(plate.imageUrl);
+              setLocalImagePreviewUri(plate.imageUrl || null);
+              setPrice(plate.price ? String(plate.price) : "");
+              setUploadStatus(null);
+              setStatusMessage(null);
+            }}
+          />
+          <ManagerButton
+            label={deleteTask.isLoading ? "Deleting..." : "Delete plate"}
+            variant="danger"
+            disabled={isBusy}
+            onPress={() => {
+              setStatusMessage(null);
+              confirmDeletePlate(plate);
+            }}
+          />
+        </ManagerCard>
+      ))}
+    </ManagerScreen>
+  );
+}
+
