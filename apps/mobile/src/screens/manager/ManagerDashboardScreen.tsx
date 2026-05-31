@@ -63,3 +63,22 @@ export function ManagerDashboardScreen() {
 
     if (reviewFilter === "plate") {
       next = next.filter((review) => review.targetType === "plate");
+    }
+
+    if (selectedPlateName) {
+      next = next.filter((review) => review.plate?.name === selectedPlateName);
+    }
+
+    if (sortMode === "highest") {
+      next.sort((a, b) => b.rating - a.rating);
+    } else if (sortMode === "lowest") {
+      next.sort((a, b) => a.rating - b.rating);
+    } else {
+      next.sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
+    }
+
+    return next;
+  }, [allReviews, reviewFilter, selectedPlateName, sortMode]);
+
+  if (isLoading) {
+    return <ManagerLoading label="Loading dashboard..." />;
