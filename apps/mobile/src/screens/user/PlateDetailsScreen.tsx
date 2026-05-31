@@ -30,3 +30,33 @@ export function PlateDetailsScreen({ route, navigation }: { route: any; navigati
           }
         }
       };
+
+      void load();
+
+      return () => {
+        isActive = false;
+      };
+    }, [plateId])
+  );
+
+  useEffect(() => {
+    if (refreshToken === 0) {
+      return;
+    }
+
+    let isActive = true;
+
+    const load = async () => {
+      setIsLoading(true);
+      try {
+        const response = await getPlateDetails(plateId);
+
+        if (isActive) {
+          setData(response);
+        }
+      } finally {
+        if (isActive) {
+          setIsLoading(false);
+        }
+      }
+    };
