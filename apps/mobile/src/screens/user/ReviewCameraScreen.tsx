@@ -49,3 +49,21 @@ export function ReviewCameraScreen({ route, navigation }: { route: any; navigati
       </Screen>
     );
   }
+
+  
+  return (
+    <View style={{ flex: 1, backgroundColor: "#000000" }}>
+      <CameraView
+        style={{ flex: 1 }}
+        facing="back"
+        ref={cameraRef}
+        mode={captureMode === "video" ? "video" : "picture"}
+        mute={false}
+        videoQuality={captureMode === "video" ? "480p" : undefined}
+      />
+      <View style={{ padding: 16, backgroundColor: "#111111" }}>
+        <Text style={{ color: "#ffffff", marginBottom: 12 }}>
+          {captureMode === "video"
+            ? "Record one live review video. It will be uploaded only after you submit the review."
+            : "Capture one live review photo. It will be uploaded only after you submit the review."}
+        </Text>
