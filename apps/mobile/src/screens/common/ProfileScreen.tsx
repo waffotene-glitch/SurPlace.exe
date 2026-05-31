@@ -8,3 +8,9 @@ export function ProfileScreen() {
   const initials = useMemo(() => {
     return (
       user?.fullName
+        ?.split(" ")
+        .slice(0, 2)
+        .map((part) => part[0]?.toUpperCase() ?? "")
+        .join("") || "U"
+    );
+  }, [user?.fullName]);
