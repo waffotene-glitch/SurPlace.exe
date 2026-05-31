@@ -190,3 +190,25 @@ function FilterRow({ children }: { children: React.ReactNode }) {
   return <View style={styles.filterRow}>{children}</View>;
 }
 
+const styles = StyleSheet.create({
+  heroEyebrow: {
+    color: managerColors.textSoft,
+    fontSize: 12,
+    fontWeight: "700",
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    marginBottom: 8,
+  },
+  heroTitle: {
+    color: managerColors.text,
+    fontSize: 24,
+    fontWeight: "800",
+  },
+  metricsRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    marginTop: 16,
+  },
+  filterRow: {
+    flexDirection: "row",
