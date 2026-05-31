@@ -61,3 +61,39 @@ export function RestaurantDetailsScreen({ route, navigation }: { route: any; nav
       }
     };
 
+    void load();
+
+    return () => {
+      isActive = false;
+    };
+  }, [restaurantId, refreshToken]);
+
+  if (isLoading || !data) {
+    return <LoadingState label="Loading restaurant..." />;
+  }
+
+  return (
+    <Screen scroll>
+      <Title subtitle={data.restaurant.location.address}>{data.restaurant.name}</Title>
+      <Card>
+        {data.restaurant.coverImageUrl ? (
+          <Image
+            source={{ uri: data.restaurant.coverImageUrl }}
+            style={{ width: "100%", height: 190, borderRadius: 16, marginBottom: 12 }}
+          />
+        ) : null}
+        <CardTitle>Restaurant info</CardTitle>
+        <Meta>
+          Rating {data.restaurant.averageRating.toFixed(1)} - {data.restaurant.totalReviews} reviews
+        </Meta>
+        <Meta>Address: {data.restaurant.location.address}</Meta>
+        <Text style={{ marginTop: 8 }}>{data.restaurant.description}</Text>
+        <Pressable
+          onPress={() =>
+            navigation.navigate("ReviewCreate", {
+              restaurantId: data.restaurant.id,
+              restaurantName: data.restaurant.name,
+            })
+          }
+          style={{ marginTop: 12 }}
+        >
