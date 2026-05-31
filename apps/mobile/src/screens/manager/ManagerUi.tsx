@@ -249,3 +249,100 @@ export function ManagerLoading({ label }: { label: string }) {
   );
 }
 
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: managerColors.background,
+  },
+  scroll: {
+    flex: 1,
+    backgroundColor: managerColors.background,
+  },
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 32,
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 24,
+    backgroundColor: managerColors.background,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: 22,
+  },
+  headerText: {
+    flex: 1,
+    paddingRight: 12,
+  },
+  headerRight: {
+    alignItems: "flex-end",
+  },
+  headerTitle: {
+    color: managerColors.text,
+    fontSize: 28,
+    fontWeight: "800",
+  },
+  headerSubtitle: {
+    color: managerColors.textMuted,
+    fontSize: 14,
+    lineHeight: 20,
+    marginTop: 6,
+  },
+  sectionHeader: {
+    marginTop: 8,
+    marginBottom: 12,
+  },
+  sectionTitle: {
+    color: managerColors.text,
+    fontSize: 16,
+    fontWeight: "800",
+  },
+  sectionSubtitle: {
+    color: managerColors.textSoft,
+    fontSize: 12,
+    lineHeight: 18,
+    marginTop: 4,
+  },
+  card: {
+    backgroundColor: managerColors.surface,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: managerColors.border,
+    padding: 16,
+    marginBottom: 14,
+    shadowColor: "#000000",
+    shadowOpacity: 0.14,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 4,
+  },
+  cardAccent: {
+    backgroundColor: managerColors.surfaceMuted,
+    borderColor: managerColors.borderSoft,
+  },
+  metric: {
+    flex: 1,
+    minWidth: 92,
+    backgroundColor: "rgba(255,255,255,0.04)",
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: managerColors.borderSoft,
+    paddingHorizontal: 12,
+    paddingVertical: 14,
+    marginBottom: 10,
+  },
+  metricValue: {
+    color: managerColors.text,
+    fontSize: 20,
+    fontWeight: "800",
+  },
+  metricLabel: {
+    color: managerColors.textSoft,
+    fontSize: 12,
+    marginTop: 6,
