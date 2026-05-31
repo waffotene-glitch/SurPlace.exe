@@ -61,3 +61,68 @@ export function RestaurantDetailsScreen({ route, navigation }: { route: any; nav
       }
     };
 
+    void load();
+
+    return () => {
+      isActive = false;
+    };
+  }, [restaurantId, refreshToken]);
+
+  if (isLoading || !data) {
+    return <LoadingState label="Loading restaurant..." />;
+  }
+
+  return (
+    <Screen scroll>
+      <Title subtitle={data.restaurant.location.address}>{data.restaurant.name}</Title>
+      <Card>
+        {data.restaurant.coverImageUrl ? (
+          <Image
+            source={{ uri: data.restaurant.coverImageUrl }}
+            style={{ width: "100%", height: 190, borderRadius: 16, marginBottom: 12 }}
+          />
+        ) : null}
+        <CardTitle>Restaurant info</CardTitle>
+        <Meta>
+          Rating {data.restaurant.averageRating.toFixed(1)} - {data.restaurant.totalReviews} reviews
+        </Meta>
+        <Meta>Address: {data.restaurant.location.address}</Meta>
+        <Text style={{ marginTop: 8 }}>{data.restaurant.description}</Text>
+        <Pressable
+          onPress={() =>
+            navigation.navigate("ReviewCreate", {
+              restaurantId: data.restaurant.id,
+              restaurantName: data.restaurant.name,
+            })
+          }
+          style={{ marginTop: 12 }}
+        >
+
+            <Text style={{ color: "#1f6f5f", fontWeight: "700" }}>Review this restaurant</Text>
+        </Pressable>
+      </Card>
+      <Text style={{ marginVertical: 10, fontWeight: "700", fontSize: 18 }}>Plates</Text>
+      {data.plates.map((plate) => (
+        <Card key={plate.id}>
+          {plate.imageUrl ? (
+            <Image
+              source={{ uri: plate.imageUrl }}
+              style={{ width: "100%", height: 150, borderRadius: 16, marginBottom: 10 }}
+            />
+          ) : null}
+          <CardTitle>{plate.name}</CardTitle>
+          <Meta>
+            Rating {plate.averageRating.toFixed(1)} - {plate.totalReviews} reviews
+          </Meta>
+          <Text style={{ marginTop: 8 }}>{plate.description}</Text>
+          <Pressable
+            onPress={() =>
+              navigation.navigate("PlateDetails", {
+                plateId: plate.id,
+                plateName: plate.name,
+                restaurantId: data.restaurant.id,
+                restaurantName: data.restaurant.name,
+              })
+            }
+            style={{ marginTop: 12 }}
+          >
