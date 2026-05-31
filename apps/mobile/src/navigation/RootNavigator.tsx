@@ -362,3 +362,22 @@ export function RootNavigator() {
   if (isLoading || hasSeenOnboarding === null) {
     return <LoadingState label="Restoring session..." />;
   }
+
+  return (
+    <RootStack.Navigator screenOptions={{ headerShown: false }}>
+      {user ? (
+        user.role === "manager" ? (
+          <RootStack.Screen name="ManagerApp" component={ManagerNavigator} />
+        ) : (
+          <RootStack.Screen name="UserApp" component={UserNavigator} />
+        )
+      ) : !hasSeenOnboarding ? (
+        <RootStack.Screen name="Onboarding">
+          {() => <OnboardingNavigator onComplete={() => void completeOnboarding()} />}
+        </RootStack.Screen>
+      ) : (
+        <RootStack.Screen name="Auth" component={AuthNavigator} />
+      )}
+    </RootStack.Navigator>
+  );
+}
