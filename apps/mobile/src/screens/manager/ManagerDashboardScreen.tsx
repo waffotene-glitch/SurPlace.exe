@@ -82,3 +82,21 @@ export function ManagerDashboardScreen() {
 
   if (isLoading) {
     return <ManagerLoading label="Loading dashboard..." />;
+  }
+
+  return (
+    <ManagerScreen scroll>
+      <ManagerHeader
+        title="Customer feedback"
+        subtitle="See what guests are saying."
+      />
+
+      <ManagerCard accent>
+        <Text style={styles.heroEyebrow}>Overview</Text>
+        <Text style={styles.heroTitle}>{data?.restaurant?.name || "No restaurant yet"}</Text>
+        <View style={styles.metricsRow}>
+          <ManagerMetric label="Average rating" value={data?.averageRating?.toFixed(1) || "0.0"} />
+          <ManagerMetric label="Plates" value={String(data?.plates.length || 0)} />
+          <ManagerMetric label="Reviews" value={String(allReviews.length)} />
+        </View>
+        <ManagerButton
