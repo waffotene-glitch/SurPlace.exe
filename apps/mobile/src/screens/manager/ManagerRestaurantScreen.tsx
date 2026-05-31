@@ -201,3 +201,35 @@ export function ManagerRestaurantScreen() {
             <ManagerButton
               label={uploadTask.isLoading ? "Uploading..." : "Choose from gallery"}
               variant="secondary"
+              disabled={isBusy}
+              onPress={() => {
+                void startCoverImageSelection("gallery").catch((selectionError) => {
+                  Alert.alert(
+                    "Restaurant cover image",
+                    selectionError instanceof Error
+                      ? selectionError.message
+                      : "Unable to select a restaurant cover image."
+                  );
+                });
+              }}
+            />
+          </View>
+        </View>
+        {coverImageUrl ? (
+          <ManagerInfoText tone="success">Cover image ready</ManagerInfoText>
+        ) : (
+          <ManagerInfoText tone="muted">No cover image yet.</ManagerInfoText>
+        )}
+        {coverImageUrl ? (
+          <ManagerButton
+            label="Remove selected cover image"
+            variant="ghost"
+            disabled={isBusy}
+            onPress={() => {
+              setCoverImageUrl("");
+              setLocalCoverPreviewUri(null);
+              setUploadStatus(null);
+            }}
+          />
+        ) : null}
+        <ManagerLabel>Cuisine tags (comma separated)</ManagerLabel>
