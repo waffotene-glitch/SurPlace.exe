@@ -49,3 +49,38 @@ export function ManagerPlatesScreen() {
     const response = await getManagerPlates(token);
     setPlates(response.items);
   }, [token]);
+
+  useFocusEffect(
+    useCallback(() => {
+      void load();
+    }, [load])
+  );
+
+  const resetForm = () => {
+    setEditingPlateId(null);
+    setName("");
+    setDescription("");
+    setImageUrl("");
+    setPrice("");
+    setLocalImagePreviewUri(null);
+    setUploadStatus(null);
+  };
+
+  const startImageSelection = useCallback(
+    async (mode: "camera" | "gallery") => {
+      const permission =
+        mode === "camera"
+          ? await ImagePicker.requestCameraPermissionsAsync()
+          : await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (permission.status !== "granted") {
+        throw new Error(
+          mode === "camera"
+            ? "Camera permission is required to take a plate photo."
+            : "Photo library permission is required to select a plate image."
+        );
+      }
+
+      const result =
+        mode === "camera"
+          ? await ImagePicker.launchCameraAsync({
