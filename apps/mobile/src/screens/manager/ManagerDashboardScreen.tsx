@@ -25,3 +25,22 @@ export function ManagerDashboardScreen() {
   const { token } = useAuth();
   const [data, setData] = useState<ManagerDashboard | null>(null);
   const [allReviews, setAllReviews] = useState<Review[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [reviewFilter, setReviewFilter] = useState<ReviewFilter>("all");
+  const [sortMode, setSortMode] = useState<SortMode>("newest");
+  const [selectedPlateName, setSelectedPlateName] = useState<string | null>(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      const load = async () => {
+        if (!token) {
+          return;
+        }
+
+        setIsLoading(true);
+        try {
+          const [dashboardResponse, reviewsResponse] = await Promise.all([
+            getManagerDashboard(token),
+            getManagerReviews(token),
+          ]);
+          setData(dashboardResponse);
