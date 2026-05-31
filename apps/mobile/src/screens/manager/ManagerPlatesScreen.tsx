@@ -259,3 +259,38 @@ export function ManagerPlatesScreen() {
         <ManagerLabel>Price</ManagerLabel>
         <ManagerInput value={price} onChangeText={setPrice} placeholder="4500" />
       </ManagerCard>
+
+      <ErrorText message={activeError} />
+      {statusMessage ? <ManagerInfoText tone="success">{statusMessage}</ManagerInfoText> : null}
+      <ManagerButton
+        label={saveTask.isLoading ? "Saving..." : editingPlateId ? "Update plate" : "Add plate"}
+        disabled={isBusy}
+        onPress={() => {
+          if (!token) {
+            return;
+          }
+
+          if (uploadTask.isLoading) {
+            uploadTask.setError("Wait for the plate image upload to finish before saving.");
+            return;
+          }
+
+          void saveTask.run(async () => {
+            if (editingPlateId) {
+              await updateManagerPlate(token, editingPlateId, {
+                name,
+                description,
+                imageUrl,
+                price: price ? Number(price) : null,
+              });
+            } else {
+              await createManagerPlate(token, {
+                name,
+                description,
+                imageUrl,
+                price: price ? Number(price) : null,
+                isAvailable: true,
+              });
+            }
+
+            await load();
