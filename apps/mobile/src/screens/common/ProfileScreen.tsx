@@ -29,3 +29,8 @@ export function ProfileScreen() {
         </View>
       </View>
 
+      <View style={styles.statsRow}>
+        <View style={styles.statCard}>
+          <Text style={styles.statValue}>{user?.role === "manager" ? "Pro" : "User"}</Text>
+          <Text style={styles.statLabel}>Account type</Text>
+        </View>
