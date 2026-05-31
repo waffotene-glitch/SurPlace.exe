@@ -123,3 +123,93 @@ export function ReviewCreateScreen({ route, navigation }: { route: any; navigati
             onPress={() => updateDraft({ capturedMediaUri: null, capturedMediaType: null })}
           />
         </View>
+
+         ) : null}
+      {statusMessage ? (
+        <Text style={{ marginBottom: 12, color: "#5b5b5b" }}>{statusMessage}</Text>
+      ) : null}
+      <ErrorText message={error} />
+      <Button
+        label={isLoading ? "Submitting..." : "Submit review"}
+        disabled={isLoading}
+        onPress={() => {
+          if (!draft.capturedMediaUri || !draft.capturedMediaType) {
+            setError("Please capture a live photo or video before submitting your review.");
+            return;
+          }
+
+          const capturedMediaUri = draft.capturedMediaUri;
+          const capturedMediaType = draft.capturedMediaType;
+
+          void run(async () => {
+            let submittedCoordinates:
+              | {
+                  lat: number;
+                  lng: number;
+                }
+              | undefined;
+
+            setStatusMessage("Getting location...");
+
+            try {
+              const permission = await withTimeout(
+                Location.requestForegroundPermissionsAsync(),
+                10000,
+                "Location permission request timed out."
+              );
+
+              if (permission.status === "granted") {
+                try {
+                  const currentPosition = await withTimeout(
+                    Location.getCurrentPositionAsync({}),
+                    12000,
+                    "Fetching your location timed out."
+                  );
+                  submittedCoordinates = {
+                    lat: currentPosition.coords.latitude,
+                    lng: currentPosition.coords.longitude,
+                  };
+                } catch (_locationError) {
+                  // Submission can continue without coordinates when verification is not enforced.
+                }
+              }
+            } catch (_permissionError) {
+              // Submission can continue without coordinates when verification is not enforced.
+            }
+
+            setStatusMessage("Uploading media...");
+            const uploadedMedia = await uploadReviewMedia({
+              uri: capturedMediaUri,
+              mediaType: capturedMediaType,
+            });
+
+            setStatusMessage("Saving review...");
+            await createReview(token, {
+              restaurantId,
+              plateId,
+              rating: Number(draft.rating),
+              comment: draft.comment,
+              submittedCoordinates,
+              media: [uploadedMedia],
+            });
+
+            markReviewsUpdated();
+            setStatusMessage("Review submitted successfully.");
+            resetDraft();
+            Alert.alert("Success", "Review submitted successfully.", [
+              {
+                text: "OK",
+                onPress: () => {
+                  setStatusMessage(null);
+                  navigation.goBack();
+                },
+              },
+            ]);
+          }).catch(() => {
+            setStatusMessage(null);
+          });
+        }}
+      />
+    </Screen>
+  );
+}
