@@ -175,3 +175,28 @@ export function ManagerButton({
     <Pressable
       onPress={onPress}
       disabled={disabled}
+      style={[styles.buttonBase, buttonStyle, disabled ? styles.buttonDisabled : null]}
+    >
+      <Text style={textStyle}>{label}</Text>
+    </Pressable>
+  );
+}
+
+export function ManagerChip({
+  label,
+  active = false,
+  onPress,
+  tone = "default",
+}: {
+  label: string;
+  active?: boolean;
+  onPress?: () => void;
+  tone?: "default" | "success" | "danger";
+}) {
+  const activeColor =
+    tone === "success"
+      ? managerColors.success
+      : tone === "danger"
+        ? managerColors.danger
+        : managerColors.accent;
+
