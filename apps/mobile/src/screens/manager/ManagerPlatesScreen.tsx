@@ -189,3 +189,38 @@ export function ManagerPlatesScreen() {
         {uploadStatus ? <ManagerInfoText tone="muted">{uploadStatus}</ManagerInfoText> : null}
       </ManagerCard>
 
+      <ManagerSectionTitle
+        title="Plate form"
+        subtitle={
+          editingPlateId
+            ? "Update the selected dish."
+            : "Add a new dish to your menu."
+        }
+      />
+      <ManagerCard>
+        <ManagerLabel>Plate name</ManagerLabel>
+        <ManagerInput value={name} onChangeText={setName} placeholder="Plate name" />
+        <ManagerLabel>Description</ManagerLabel>
+        <ManagerInput value={description} onChangeText={setDescription} multiline placeholder="Describe the plate" />
+        <ManagerLabel>Plate image</ManagerLabel>
+        <View style={styles.actionRow}>
+          <View style={styles.actionButton}>
+            <ManagerButton
+              label={uploadTask.isLoading ? "Uploading..." : "Take photo"}
+              variant="secondary"
+              disabled={isBusy}
+              onPress={() => {
+                void startImageSelection("camera").catch((selectionError) => {
+                  Alert.alert(
+                    "Plate image",
+                    selectionError instanceof Error
+                      ? selectionError.message
+                      : "Unable to capture a plate image."
+                  );
+                });
+              }}
+            />
+          </View>
+          <View style={styles.actionButton}>
+            <ManagerButton
+              label={uploadTask.isLoading ? "Uploading..." : "Choose from gallery"}
