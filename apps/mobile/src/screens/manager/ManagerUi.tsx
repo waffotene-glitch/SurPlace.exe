@@ -25,3 +25,28 @@ export const managerColors = {
 };
 
 export function ManagerScreen({
+  children,
+  scroll = false,
+}: {
+  children: React.ReactNode;
+  scroll?: boolean;
+}) {
+  if (scroll) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          {children}
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
+
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.content}>{children}</View>
+    </SafeAreaView>
+  );
