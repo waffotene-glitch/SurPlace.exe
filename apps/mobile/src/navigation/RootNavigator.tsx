@@ -96,3 +96,22 @@ function HomeStackNavigator() {
         component={RestaurantDetailsScreen}
         options={{ title: "Restaurant" }}
       />
+      <UserStack.Screen
+        name="PlateDetails"
+        component={PlateDetailsScreen}
+        options={{ title: "Plate" }}
+      />
+      <UserStack.Screen
+        name="ReviewCreate"
+        component={ReviewCreateScreen}
+        options={{ title: "Write Review" }}
+      />
+      <UserStack.Screen
+        name="ReviewCamera"
+        component={ReviewCameraScreen}
+        options={{ headerShown: false, presentation: "modal" }}
+      />
+    </UserStack.Navigator>
+  );
+}
+
