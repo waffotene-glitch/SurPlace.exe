@@ -154,3 +154,38 @@ export function ManagerPlatesScreen() {
                     ? deleteError.message
                     : "Unable to delete this plate right now."
                 );
+              });
+          },
+        },
+      ]);
+    },
+    [deleteTask, editingPlateId, token]
+  );
+
+  const activeError = uploadTask.error || saveTask.error || deleteTask.error;
+  const activePreviewUri = localImagePreviewUri || imageUrl;
+  const isBusy = uploadTask.isLoading || saveTask.isLoading || deleteTask.isLoading;
+
+  return (
+    <ManagerScreen scroll>
+      <ManagerHeader
+        title="Manage dishes"
+        subtitle="Add and update your menu."
+        right={<ManagerChip label={`${plates.length} items`} active />}
+      />
+
+      <ManagerCard accent>
+        <Text style={styles.heroTitle}>{editingPlateId ? "Editing dish" : "Add a dish"}</Text>
+        {activePreviewUri?.trim() ? (
+          <MediaPreview uri={activePreviewUri} height={180} fallbackText="Plate image preview is unavailable." />
+        ) : (
+          <View style={styles.previewPlaceholder}>
+            <Text style={styles.previewPlaceholderTitle}>Plate image preview</Text>
+            <ManagerInfoText tone="muted">
+              Add a photo for this dish.
+            </ManagerInfoText>
+          </View>
+        )}
+        {uploadStatus ? <ManagerInfoText tone="muted">{uploadStatus}</ManagerInfoText> : null}
+      </ManagerCard>
+
