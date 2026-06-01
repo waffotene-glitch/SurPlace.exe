@@ -25,3 +25,14 @@ const getManagerRestaurant = asyncHandler(async (req, res) => {
     if (error.statusCode) {
       res.status(error.statusCode);
     }
+    throw error;
+  }
+});
+
+const upsertManagedRestaurant = asyncHandler(async (req, res) => {
+  try {
+    const result = await restaurantService.upsertManagedRestaurant({
+      managedRestaurant: req.managedRestaurant,
+      user: req.user,
+      data: req.body,
+    });
