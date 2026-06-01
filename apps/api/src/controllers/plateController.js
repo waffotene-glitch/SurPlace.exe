@@ -46,3 +46,15 @@ const updateManagedPlate = asyncHandler(async (req, res) => {
     throw error;
   }
 });
+const deleteManagedPlate = asyncHandler(async (req, res) => {
+  try {
+    const result = await plateService.deleteManagedPlate(req.managedRestaurant, req.params.plateId);
+    res.json(result);
+  } catch (error) {
+    if (error.statusCode) {
+      res.status(error.statusCode);
+    }
+
+    throw error;
+  }
+});
