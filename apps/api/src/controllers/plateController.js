@@ -59,3 +59,6 @@ const deleteManagedPlate = asyncHandler(async (req, res) => {
   }
 });
 module.exports = {
+    listPlates,
+  getPlateDetails,
+  listManagedPlates,
