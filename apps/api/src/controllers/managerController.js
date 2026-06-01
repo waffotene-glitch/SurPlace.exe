@@ -8,3 +8,4 @@ const listManagerReviews = asyncHandler(async (req, res) => {
   const result = await managerService.listManagerReviews(req.managedRestaurant);
   res.json(result);
 });
+module.exports = {
