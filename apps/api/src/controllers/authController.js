@@ -10,3 +10,5 @@ const register = asyncHandler(async (req, res) => {
     }
     throw error;
   }
+  res.status(201).json(user);
+});
