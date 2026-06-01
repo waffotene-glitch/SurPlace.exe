@@ -15,3 +15,7 @@ const getPlateDetails = asyncHandler(async (req, res) => {
 throw error;
   }
 });
+const listManagedPlates = asyncHandler(async (req, res) => {
+  const result = await plateService.listManagedPlates(req.managedRestaurant);
+  res.json(result);
+});
