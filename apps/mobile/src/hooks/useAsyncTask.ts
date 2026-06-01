@@ -17,3 +17,5 @@ export function useAsyncTask() {
       setIsLoading(false);
     }
   };
+return { isLoading, error, setError, run };
+}
