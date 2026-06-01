@@ -134,3 +134,9 @@ export function updateManagerPlate(
     body: payload,
   });
 }
+export function deleteManagerPlate(token: string, plateId: string) {
+  return apiRequest<{ success: boolean }>(`/manager/plates/${plateId}`, {
+    method: "DELETE",
+    token,
+  });
+}
