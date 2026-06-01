@@ -5,6 +5,10 @@ const listFeed = asyncHandler(async (_req, res) => {
   const result = await reviewService.listFeed();
   res.json(result);
 });
+
+
+
+
 const createReview = asyncHandler(async (req, res) => {
   try {
     const result = await reviewService.createReview({
@@ -20,6 +24,9 @@ const createReview = asyncHandler(async (req, res) => {
     throw error;
   }
 });
+
+
+
 const likeReview = asyncHandler(async (req, res) => {
   try {
     const result = await reviewService.likeReview({
@@ -35,4 +42,8 @@ const likeReview = asyncHandler(async (req, res) => {
     throw error;
   }
 });
+ 
 module.exports = { listFeed, createReview, likeReview };
+
+
+
