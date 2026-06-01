@@ -9,3 +9,4 @@ const listManagerReviews = asyncHandler(async (req, res) => {
   res.json(result);
 });
 module.exports = {
+    getDashboard,
