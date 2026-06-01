@@ -21,3 +21,5 @@ const login = asyncHandler(async (req, res) => {
       res.status(error.statusCode);
     }
 throw error;
+ }
+});
