@@ -36,3 +36,9 @@ const upsertManagedRestaurant = asyncHandler(async (req, res) => {
       user: req.user,
       data: req.body,
     });
+     res.status(result.statusCode).json(result.body);
+  } catch (error) {
+    if (error.statusCode) {
+      res.status(error.statusCode);
+    }
+    
