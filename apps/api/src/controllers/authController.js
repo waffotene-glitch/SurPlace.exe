@@ -12,3 +12,11 @@ const register = asyncHandler(async (req, res) => {
   }
   res.status(201).json(user);
 });
+const login = asyncHandler(async (req, res) => {
+  try {
+    const result = await authService.login(req.body);
+    res.json(result);
+  } catch (error) {
+    if (error.statusCode) {
+      res.status(error.statusCode);
+    }
