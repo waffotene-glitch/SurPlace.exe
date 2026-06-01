@@ -27,3 +27,6 @@ const createManagedPlate = asyncHandler(async (req, res) => {
     if (error.statusCode) {
       res.status(error.statusCode);
     }
+throw error;
+  }
+});
