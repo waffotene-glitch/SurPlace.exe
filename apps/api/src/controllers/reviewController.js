@@ -5,3 +5,18 @@ const listFeed = asyncHandler(async (_req, res) => {
   const result = await reviewService.listFeed();
   res.json(result);
 });
+const createReview = asyncHandler(async (req, res) => {
+  try {
+    const result = await reviewService.createReview({
+      user: req.user,
+      data: req.body,
+    });
+    res.status(result.statusCode).json(result.body);
+  } catch (error) {
+    if (error.statusCode) {
+      res.status(error.statusCode);
+    }
+
+    throw error;
+  }
+});
