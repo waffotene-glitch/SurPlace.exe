@@ -30,3 +30,19 @@ const createManagedPlate = asyncHandler(async (req, res) => {
 throw error;
   }
 });
+const updateManagedPlate = asyncHandler(async (req, res) => {
+  try {
+    const result = await plateService.updateManagedPlate(
+      req.managedRestaurant,
+      req.params.plateId,
+      req.body
+    );
+    res.json(result);
+  } catch (error) {
+    if (error.statusCode) {
+      res.status(error.statusCode);
+    }
+
+    throw error;
+  }
+});
