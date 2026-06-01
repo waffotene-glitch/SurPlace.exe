@@ -19,3 +19,11 @@ const listManagedPlates = asyncHandler(async (req, res) => {
   const result = await plateService.listManagedPlates(req.managedRestaurant);
   res.json(result);
 });
+const createManagedPlate = asyncHandler(async (req, res) => {
+  try {
+    const result = await plateService.createManagedPlate(req.managedRestaurant, req.body);
+    res.status(result.statusCode).json(result.body);
+  } catch (error) {
+    if (error.statusCode) {
+      res.status(error.statusCode);
+    }
