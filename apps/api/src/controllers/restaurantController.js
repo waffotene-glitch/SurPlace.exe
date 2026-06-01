@@ -13,4 +13,15 @@ const getRestaurantDetails = asyncHandler(async (req, res) => {
     if (error.statusCode) {
       res.status(error.statusCode);
     }
-    
+    throw error;
+  }
+});
+
+const getManagerRestaurant = asyncHandler(async (req, res) => {
+  try {
+    const result = await restaurantService.getManagerRestaurant(req.managedRestaurant);
+    res.json(result);
+  } catch (error) {
+    if (error.statusCode) {
+      res.status(error.statusCode);
+    }
