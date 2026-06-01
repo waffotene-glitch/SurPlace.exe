@@ -20,3 +20,18 @@ const createReview = asyncHandler(async (req, res) => {
     throw error;
   }
 });
+const likeReview = asyncHandler(async (req, res) => {
+  try {
+    const result = await reviewService.likeReview({
+      userId: req.user._id,
+      reviewId: req.params.reviewId,
+    });
+    res.status(result.statusCode).json(result.body);
+  } catch (error) {
+    if (error.statusCode) {
+      res.status(error.statusCode);
+    }
+
+    throw error;
+  }
+});
