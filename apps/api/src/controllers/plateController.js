@@ -62,3 +62,6 @@ module.exports = {
     listPlates,
   getPlateDetails,
   listManagedPlates,
+  createManagedPlate,
+  updateManagedPlate,
+  deleteManagedPlate,
