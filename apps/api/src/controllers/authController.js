@@ -23,3 +23,5 @@ const login = asyncHandler(async (req, res) => {
 throw error;
  }
 });
+const me = asyncHandler(async (req, res) => {
+  const result = await authService.getMe(req.user);
