@@ -65,3 +65,4 @@ module.exports = {
   createManagedPlate,
   updateManagedPlate,
   deleteManagedPlate,
+  };
