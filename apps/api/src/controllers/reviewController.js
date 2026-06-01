@@ -35,3 +35,4 @@ const likeReview = asyncHandler(async (req, res) => {
     throw error;
   }
 });
+module.exports = { listFeed, createReview, likeReview };
