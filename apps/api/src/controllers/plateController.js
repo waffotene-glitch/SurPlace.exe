@@ -1,10 +1,16 @@
 const asyncHandler = require("express-async-handler");
 const plateService = require("../services/PlateService");
 
+
+
+
 const listPlates = asyncHandler(async (req, res) => {
   const result = await plateService.listPlates(req.query);
   res.json(result);
 });
+
+
+
 
 const getPlateDetails = asyncHandler(async (req, res) => {
   try {
@@ -19,10 +25,14 @@ const getPlateDetails = asyncHandler(async (req, res) => {
   }
 });
 
+
 const listManagedPlates = asyncHandler(async (req, res) => {
   const result = await plateService.listManagedPlates(req.managedRestaurant);
   res.json(result);
 });
+ 
+
+
 
 const createManagedPlate = asyncHandler(async (req, res) => {
   try {
@@ -33,10 +43,13 @@ const createManagedPlate = asyncHandler(async (req, res) => {
       res.status(error.statusCode);
     }
 
+
+
     throw error;
   }
 });
 
+ 
 const updateManagedPlate = asyncHandler(async (req, res) => {
   try {
     const result = await plateService.updateManagedPlate(
@@ -54,6 +67,9 @@ const updateManagedPlate = asyncHandler(async (req, res) => {
   }
 });
 
+
+
+
 const deleteManagedPlate = asyncHandler(async (req, res) => {
   try {
     const result = await plateService.deleteManagedPlate(req.managedRestaurant, req.params.plateId);
@@ -67,11 +83,17 @@ const deleteManagedPlate = asyncHandler(async (req, res) => {
   }
 });
 
+
 module.exports = {
   listPlates,
+ main
   getPlateDetails,
   listManagedPlates,
   createManagedPlate,
   updateManagedPlate,
   deleteManagedPlate,
+ Bouyem-Branch
+  };
+
 };
+
