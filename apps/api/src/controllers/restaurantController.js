@@ -44,3 +44,9 @@ const upsertManagedRestaurant = asyncHandler(async (req, res) => {
       throw error;
   }
 });
+module.exports = {
+  listRestaurants,
+  getRestaurantDetails,
+  getManagerRestaurant,
+  upsertManagedRestaurant,
+};
