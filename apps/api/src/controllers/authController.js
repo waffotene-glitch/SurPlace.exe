@@ -27,3 +27,4 @@ const me = asyncHandler(async (req, res) => {
   const result = await authService.getMe(req.user);
    res.json(result);
    });
+   module.exports = { register, login, me };
