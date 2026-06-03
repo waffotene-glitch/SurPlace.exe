@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Image, Text, View } from "react-native";
+import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { Video, ResizeMode } from "expo-av";
+import { Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
-import { Button, ErrorText, Field, Meta, PillGroup, Screen, Title } from "../../components/AppUi";
+import { Button, ErrorText } from "../../components/AppUi";
 import { useAsyncTask } from "../../hooks/useAsyncTask";
 import { useAuth } from "../../context/AuthContext";
 import { useReviewDraft } from "../../context/ReviewDraftContext";
 import { useReviewRefresh } from "../../context/ReviewRefreshContext";
-import { ENFORCE_LOCATION_VERIFICATION } from "../../config/api";
 import { createReview } from "../../services/appApi";
 import { uploadReviewMedia } from "../../services/uploadApi";
 
@@ -26,7 +26,6 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string)
       });
   });
 }
-
 
 export function ReviewCreateScreen({ route, navigation }: { route: any; navigation: any }) {
   const { token } = useAuth();
@@ -53,82 +52,149 @@ export function ReviewCreateScreen({ route, navigation }: { route: any; navigati
 
   if (!token) {
     return (
-      <Screen>
-        <Title>Authentication required</Title>
-      </Screen>
+      <View style={styles.authShell}>
+        <Text style={styles.authTitle}>Authentication required</Text>
+      </View>
     );
   }
 
   return (
-    <Screen scroll>
-      <Title subtitle={plateName ? `${restaurantName} - ${plateName}` : restaurantName}>
-        Create Verified Review
-      </Title>
-      <Text style={{ marginBottom: 12, color: "#5b5b5b" }}>
-        Capture exactly one live photo or one live video. Location is still requested during
-        submission for verification data.
-      </Text>
-      <PillGroup
-        value={draft.rating}
-        onChange={(value) => updateDraft({ rating: value })}
-        options={[
-          { label: "1", value: "1" },
-          { label: "2", value: "2" },
-          { label: "3", value: "3" },
-          { label: "4", value: "4" },
-          { label: "5", value: "5" },
-        ]}
-      />
+    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+      <View style={styles.heroCard}>
+        <Text style={styles.heroEyebrow}>Verified review</Text>
+        <Text style={styles.heroTitle}>Share your real experience</Text>
+        <Text style={styles.heroSubtitle}>
+          {plateName ? `${restaurantName} · ${plateName}` : restaurantName}
+        </Text>
+        <Text style={styles.heroBody}>One live photo or video is required.</Text>
+        <Text style={styles.heroNote}>Location may be requested.</Text>
+      </View>
 
-      <Field
-        label="Comment"
-        value={draft.comment}
-        onChangeText={(value) => updateDraft({ comment: value })}
-        placeholder="What did you think about the food and service?"
-        multiline
-      />
-      <Button
-        label={draft.capturedMediaType === "image" ? "Replace live photo" : "Take live photo"}
-        variant="secondary"
-        onPress={() => navigation.navigate("ReviewCamera", { captureMode: "image" })}
-      />
-      <Button
-        label={draft.capturedMediaType === "video" ? "Replace live video" : "Record live video"}
-        variant="secondary"
-        onPress={() => navigation.navigate("ReviewCamera", { captureMode: "video" })}
-      />
+      <View style={styles.sectionCard}>
+        <Text style={styles.sectionTitle}>Your rating</Text>
+        <View style={styles.ratingRow}>
+          {["1", "2", "3", "4", "5"].map((value) => {
+            const active = draft.rating === value;
+            return (
+              <Pressable
+                key={value}
+                onPress={() => updateDraft({ rating: value })}
+                style={[styles.ratingPill, active && styles.ratingPillActive]}
+              >
+                <Text style={[styles.ratingPillText, active && styles.ratingPillTextActive]}>
+                  {value}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      </View>
+
+      <View style={styles.sectionCard}>
+        <Text style={styles.sectionTitle}>Comment</Text>
+        <View style={styles.textAreaShell}>
+          <Text style={styles.textAreaLabel}>Your thoughts</Text>
+          <View style={styles.commentEditor}>
+            <View style={styles.inputFrame}>
+              <TextInput
+                value={draft.comment}
+                onChangeText={(value) => updateDraft({ comment: value })}
+                placeholder="What did you think about the food and service?"
+                placeholderTextColor="#9ca3af"
+                multiline
+                style={styles.textArea}
+              />
+            </View>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.captureGrid}>
+        <Pressable
+          onPress={() => navigation.navigate("ReviewCamera", { captureMode: "image" })}
+          style={[
+            styles.captureCard,
+            draft.capturedMediaType === "image" ? styles.captureCardActive : null,
+          ]}
+        >
+          <View style={styles.captureHeader}>
+            <View style={[styles.captureIconWrap, styles.captureIconWarm]}>
+              <Ionicons
+                name={draft.capturedMediaType === "image" ? "checkmark-circle" : "camera-outline"}
+                size={22}
+                color="#ffffff"
+              />
+            </View>
+            <View style={styles.captureTextWrap}>
+              <Text style={styles.captureTitle}>
+                {draft.capturedMediaType === "image" ? "Replace live photo" : "Take live photo"}
+              </Text>
+              <Text style={styles.captureBody}>Capture the meal, table, or plating clearly.</Text>
+            </View>
+          </View>
+        </Pressable>
+
+        <Pressable
+          onPress={() => navigation.navigate("ReviewCamera", { captureMode: "video" })}
+          style={[
+            styles.captureCard,
+            styles.captureCardDark,
+            draft.capturedMediaType === "video" ? styles.captureCardVideoActive : null,
+          ]}
+        >
+          <View style={styles.captureHeader}>
+            <View style={[styles.captureIconWrap, styles.captureIconCool]}>
+              <Ionicons
+                name={draft.capturedMediaType === "video" ? "checkmark-circle" : "videocam-outline"}
+                size={22}
+                color="#ffffff"
+              />
+            </View>
+            <View style={styles.captureTextWrap}>
+              <Text style={[styles.captureTitle, styles.captureTitleDark]}>
+                {draft.capturedMediaType === "video" ? "Replace short video" : "Record short video"}
+              </Text>
+              <Text style={[styles.captureBody, styles.captureBodyDark]}>Show the atmosphere in one quick clip.</Text>
+            </View>
+          </View>
+        </Pressable>
+      </View>
+
       {draft.capturedMediaUri ? (
-        <View style={{ marginBottom: 16 }}>
+        <View style={styles.previewCard}>
+          <Text style={styles.sectionTitle}>Selected media</Text>
           {draft.capturedMediaType === "image" ? (
-            <Image
-              source={{ uri: draft.capturedMediaUri }}
-              style={{ width: "100%", height: 220, borderRadius: 16 }}
-            />
+            <Image source={{ uri: draft.capturedMediaUri }} style={styles.previewImage} />
           ) : (
             <Video
               source={{ uri: draft.capturedMediaUri }}
-              style={{ width: "100%", height: 200, borderRadius: 16, backgroundColor: "#111111" }}
+              style={styles.previewVideo}
               useNativeControls
               resizeMode={ResizeMode.COVER}
             />
           )}
-          <Meta>
+          <Text style={styles.previewMeta}>
             {draft.capturedMediaType === "video"
               ? "One live video selected for this review."
               : "One live photo selected for this review."}
-          </Meta>
+          </Text>
           <Button
             label="Remove selected media"
             variant="secondary"
             onPress={() => updateDraft({ capturedMediaUri: null, capturedMediaType: null })}
           />
         </View>
+      ) : (
+        <View style={styles.tipCard}>
+          <Text style={styles.tipTitle}>Before you submit</Text>
+          <Text style={styles.tipLine}>One live photo or video is required.</Text>
+          <Text style={styles.tipLine}>Location may be requested.</Text>
+        </View>
+      )}
 
-         ) : null}
-      {statusMessage ? (
-        <Text style={{ marginBottom: 12, color: "#5b5b5b" }}>{statusMessage}</Text>
-      ) : null}
+      {statusMessage ? <Text style={styles.statusText}>{statusMessage}</Text> : null}
       <ErrorText message={error} />
+
       <Button
         label={isLoading ? "Submitting..." : "Submit review"}
         disabled={isLoading}
@@ -170,11 +236,9 @@ export function ReviewCreateScreen({ route, navigation }: { route: any; navigati
                     lng: currentPosition.coords.longitude,
                   };
                 } catch (_locationError) {
-                  // Submission can continue without coordinates when verification is not enforced.
                 }
               }
             } catch (_permissionError) {
-              // Submission can continue without coordinates when verification is not enforced.
             }
 
             setStatusMessage("Uploading media...");
@@ -210,6 +274,231 @@ export function ReviewCreateScreen({ route, navigation }: { route: any; navigati
           });
         }}
       />
-    </Screen>
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: "#fff8f3",
+  },
+  content: {
+    padding: 16,
+    paddingBottom: 28,
+  },
+  authShell: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff8f3",
+    padding: 24,
+  },
+  authTitle: {
+    fontSize: 24,
+    fontWeight: "800",
+    color: "#18181b",
+  },
+  heroCard: {
+    backgroundColor: "#171717",
+    borderRadius: 24,
+    padding: 20,
+    marginBottom: 16,
+  },
+  heroEyebrow: {
+    color: "#f6a27d",
+    fontWeight: "700",
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    marginBottom: 8,
+  },
+  heroTitle: {
+    color: "#ffffff",
+    fontSize: 28,
+    fontWeight: "800",
+    marginBottom: 6,
+  },
+  heroSubtitle: {
+    color: "#ffffff",
+    fontSize: 15,
+    fontWeight: "700",
+    marginBottom: 10,
+  },
+  heroBody: {
+    color: "#e5e7eb",
+    lineHeight: 20,
+  },
+  heroNote: {
+    color: "#d4d4d8",
+    lineHeight: 19,
+    marginTop: 4,
+  },
+  sectionCard: {
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    padding: 16,
+    marginBottom: 14,
+  },
+  sectionTitle: {
+    color: "#18181b",
+    fontSize: 18,
+    fontWeight: "800",
+    marginBottom: 12,
+  },
+  ratingRow: {
+    flexDirection: "row",
+    gap: 10,
+    flexWrap: "wrap",
+  },
+  ratingPill: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: "#f3d8cc",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff6f1",
+  },
+  ratingPillActive: {
+    backgroundColor: "#f26b3a",
+    borderColor: "#f26b3a",
+  },
+  ratingPillText: {
+    color: "#c25128",
+    fontWeight: "800",
+    fontSize: 16,
+  },
+  ratingPillTextActive: {
+    color: "#ffffff",
+  },
+  textAreaShell: {
+    marginTop: 2,
+  },
+  textAreaLabel: {
+    color: "#4b5563",
+    fontSize: 13,
+    fontWeight: "700",
+    marginBottom: 8,
+  },
+  commentEditor: {
+    borderRadius: 16,
+    backgroundColor: "#fff8f3",
+    padding: 12,
+  },
+  inputFrame: {
+    borderRadius: 14,
+    backgroundColor: "#ffffff",
+    borderWidth: 1,
+    borderColor: "#f0dfd6",
+    padding: 10,
+  },
+  textArea: {
+    minHeight: 120,
+    color: "#111827",
+    textAlignVertical: "top",
+  },
+  captureGrid: {
+    gap: 12,
+    marginBottom: 14,
+  },
+  captureCard: {
+    borderRadius: 22,
+    backgroundColor: "#ffffff",
+    padding: 18,
+    borderWidth: 1,
+    borderColor: "#f0dfd6",
+  },
+  captureCardActive: {
+    borderColor: "#f26b3a",
+    backgroundColor: "#fff4ee",
+  },
+  captureCardDark: {
+    backgroundColor: "#1a1a1a",
+    borderColor: "#303030",
+  },
+  captureCardVideoActive: {
+    borderColor: "#7fd4c8",
+    backgroundColor: "#162124",
+  },
+  captureHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  captureIconWrap: {
+    width: 48,
+    height: 48,
+    borderRadius: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 14,
+  },
+  captureIconWarm: {
+    backgroundColor: "#f26b3a",
+  },
+  captureIconCool: {
+    backgroundColor: "#1f6f78",
+  },
+  captureTextWrap: {
+    flex: 1,
+  },
+  captureTitle: {
+    color: "#18181b",
+    fontSize: 18,
+    fontWeight: "800",
+    marginBottom: 6,
+  },
+  captureTitleDark: {
+    color: "#ffffff",
+  },
+  captureBody: {
+    color: "#6b7280",
+    lineHeight: 20,
+  },
+  captureBodyDark: {
+    color: "#d4d4d8",
+  },
+  previewCard: {
+    backgroundColor: "#ffffff",
+    borderRadius: 22,
+    padding: 16,
+    marginBottom: 14,
+  },
+  previewImage: {
+    width: "100%",
+    height: 240,
+    borderRadius: 18,
+    marginBottom: 12,
+  },
+  previewVideo: {
+    width: "100%",
+    height: 220,
+    borderRadius: 18,
+    marginBottom: 12,
+    backgroundColor: "#111111",
+  },
+  previewMeta: {
+    color: "#6b7280",
+    marginBottom: 12,
+  },
+  tipCard: {
+    backgroundColor: "#fff1e8",
+    borderRadius: 22,
+    padding: 16,
+    marginBottom: 14,
+  },
+  tipTitle: {
+    color: "#18181b",
+    fontSize: 17,
+    fontWeight: "800",
+    marginBottom: 8,
+  },
+  tipLine: {
+    color: "#6b7280",
+    marginBottom: 4,
+  },
+  statusText: {
+    color: "#4b5563",
+    marginBottom: 12,
+  },
+});
