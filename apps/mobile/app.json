@@ -1,25 +1,37 @@
-import "react-native-gesture-handler";
-import { StatusBar } from "expo-status-bar";
-import { NavigationContainer } from "@react-navigation/native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { RootNavigator } from "./src/navigation/RootNavigator";
-import { AuthProvider } from "./src/context/AuthContext";
-import { ReviewDraftProvider } from "./src/context/ReviewDraftContext";
-import { ReviewRefreshProvider } from "./src/context/ReviewRefreshContext";
-
-export default function App() {
-  return (
-    <SafeAreaProvider>
-      <AuthProvider>
-        <ReviewRefreshProvider>
-          <ReviewDraftProvider>
-            <NavigationContainer>
-              <StatusBar style="dark" />
-              <RootNavigator />
-            </NavigationContainer>
-          </ReviewDraftProvider>
-        </ReviewRefreshProvider>
-      </AuthProvider>
-    </SafeAreaProvider>
-  );
+{
+  "expo": {
+    "name": "Verified Food Review",
+    "slug": "verified-food-review",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#FAF7F2"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Camera access is required to capture live review photos and manager plate images.",
+        "NSLocationWhenInUseUsageDescription": "Location access is required to verify that reviews are posted on-site.",
+        "NSMicrophoneUsageDescription": "Microphone access is required to record live review videos.",
+        "NSPhotoLibraryUsageDescription": "Photo library access is required so managers can choose plate images from the gallery."
+      }
+    },
+    "android": {
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "CAMERA",
+        "READ_MEDIA_IMAGES",
+        "RECORD_AUDIO"
+      ]
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
 }
