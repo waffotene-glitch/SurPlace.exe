@@ -8,7 +8,6 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PASSWORD_LETTER_PATTERN = /[A-Za-z]/;
 const PASSWORD_NUMBER_PATTERN = /\d/;
 
-
 class AuthService {
   buildAuthResponse(user) {
     return {
@@ -17,7 +16,7 @@ class AuthService {
     };
   }
 
-   async register(data) {
+  async register(data) {
     const { fullName, email, password } = data;
     const role = normalizeRole(data.role);
 
@@ -90,3 +89,4 @@ class AuthService {
   }
 }
 
+module.exports = new AuthService();
