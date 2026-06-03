@@ -5,9 +5,6 @@ const listRestaurants = asyncHandler(async (req, res) => {
   const result = await restaurantService.listRestaurants(req.query);
   res.json(result);
 });
- 
-
-
 
 const getRestaurantDetails = asyncHandler(async (req, res) => {
   try {
@@ -17,7 +14,21 @@ const getRestaurantDetails = asyncHandler(async (req, res) => {
     if (error.statusCode) {
       res.status(error.statusCode);
     }
-  throw error;
+
+    throw error;
+  }
+});
+
+const getManagerRestaurant = asyncHandler(async (req, res) => {
+  try {
+    const result = await restaurantService.getManagerRestaurant(req.managedRestaurant);
+    res.json(result);
+  } catch (error) {
+    if (error.statusCode) {
+      res.status(error.statusCode);
+    }
+
+    throw error;
   }
 });
 
@@ -28,27 +39,19 @@ const upsertManagedRestaurant = asyncHandler(async (req, res) => {
       user: req.user,
       data: req.body,
     });
- 
     res.status(result.statusCode).json(result.body);
- 
   } catch (error) {
     if (error.statusCode) {
       res.status(error.statusCode);
     }
- 
 
     throw error;
   }
 });
 
- 
 module.exports = {
   listRestaurants,
   getRestaurantDetails,
   getManagerRestaurant,
   upsertManagedRestaurant,
-
 };
-
-
-
