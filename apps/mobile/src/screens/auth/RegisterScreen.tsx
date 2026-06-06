@@ -31,7 +31,13 @@ export function RegisterScreen({ navigation }: { navigation: any }) {
     <AuthPlainScaffold>
       <AuthTopHeader
         title="Create account"
-        subtitle={step === "role" ? "Choose your role to continue." : "Add your details to continue."}
+        subtitle={
+          step === "role"
+            ? "Choose your role to continue."
+            : role === "manager"
+              ? "Set up your restaurant profile."
+              : "Start reviewing trusted food spots."
+        }
         onBack={() => {
           if (step === "form") {
             setStep("role");
@@ -77,25 +83,17 @@ export function RegisterScreen({ navigation }: { navigation: any }) {
           </View>
         </View>
       ) : (
-        <AuthFormCard
-          title={role === "manager" ? "Create your manager account" : "Create your user account"}
-          subtitle={role === "manager" ? "Step 2 of 2. Add your details to manage your restaurant." : "Step 2 of 2. Add your details to start discovering and reviewing."}
-        >
-          <View style={styles.selectedRoleBanner}>
-            <Text style={styles.selectedRoleEyebrow}>Selected account type</Text>
-            <Text style={styles.selectedRoleValue}>
-              {role === "manager" ? "Manage Restaurant" : "Discover & Review"}
-            </Text>
-          </View>
+        <AuthFormCard>
+          <Text style={styles.formStepLabel}>Step 2 of 2</Text>
           <AuthField
-            label="Full Name"
+            label="Full name"
             value={fullName}
             onChangeText={setFullName}
             placeholder={role === "manager" ? "Jane Manager" : "Alex Reviewer"}
             icon={AuthIcons.user()}
           />
           <AuthField
-            label={role === "manager" ? "Business Email" : "Email Address"}
+            label="Email"
             value={email}
             onChangeText={setEmail}
             placeholder="your.email@example.com"
@@ -185,26 +183,13 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     marginBottom: 8,
   },
-  selectedRoleBanner: {
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: "#dbe4f0",
-    backgroundColor: "#f8fafc",
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    marginBottom: 18,
-  },
-  selectedRoleEyebrow: {
+  formStepLabel: {
     color: "#667085",
-    fontSize: 11,
-    fontWeight: "700",
-    textTransform: "uppercase",
-    letterSpacing: 0.8,
-    marginBottom: 5,
-  },
-  selectedRoleValue: {
-    color: "#001e36",
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: "800",
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    textAlign: "center",
+    marginBottom: 16,
   },
 });
