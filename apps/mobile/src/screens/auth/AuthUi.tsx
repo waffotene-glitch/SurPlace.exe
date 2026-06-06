@@ -290,9 +290,12 @@ export function AuthRoleCard({
   type: "user" | "manager";
 }) {
   const accentColor = type === "user" ? authColors.orange : authColors.navy;
-  const cardBackground = active ? `${accentColor}12` : authColors.white;
   const cardBorderColor = active ? accentColor : "#d8dee7";
-  const iconBackground = active ? accentColor : `${accentColor}14`;
+  const iconBackground = active
+    ? accentColor
+    : type === "user"
+      ? "#fff1e8"
+      : "#edf3ff";
   const iconColor = active ? authColors.white : accentColor;
 
   return (
@@ -302,7 +305,7 @@ export function AuthRoleCard({
         styles.roleCard,
         {
           borderColor: cardBorderColor,
-          backgroundColor: cardBackground,
+          backgroundColor: authColors.white,
         },
         active ? styles.roleCardActive : null,
       ]}
@@ -376,8 +379,9 @@ const styles = StyleSheet.create({
   },
   plainScrollContent: {
     flexGrow: 1,
+    justifyContent: "center",
     paddingHorizontal: 25,
-    paddingTop: 10,
+    paddingTop: 18,
     paddingBottom: 28,
   },
   brandBlock: {
@@ -542,8 +546,8 @@ const styles = StyleSheet.create({
   },
   topHeader: {
     alignItems: "center",
-    marginTop: 6,
-    marginBottom: 18,
+    marginTop: 0,
+    marginBottom: 14,
   },
   backButton: {
     position: "absolute",
@@ -557,16 +561,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "800",
     letterSpacing: 2,
-    marginBottom: 10,
+    marginBottom: 8,
     textTransform: "uppercase",
   },
   topTitle: {
     color: authColors.ink,
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: "800",
     textAlign: "center",
-    lineHeight: 42,
-    marginBottom: 10,
+    lineHeight: 36,
+    marginBottom: 6,
   },
   topSubtitle: {
     color: authColors.muted,
@@ -575,46 +579,45 @@ const styles = StyleSheet.create({
     lineHeight: 21,
   },
   roleCard: {
-    minHeight: 184,
-    borderRadius: 22,
+    minHeight: 132,
+    borderRadius: 16,
     borderWidth: 2,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
-    elevation: 5,
-    marginBottom: 16,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
+    marginBottom: 10,
   },
   roleCardActive: {
-    shadowOpacity: 0.16,
-    shadowRadius: 14,
-    elevation: 7,
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 5,
   },
   roleCardContent: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
   },
   roleCardTopRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 18,
+    marginBottom: 12,
   },
   roleIconCircle: {
-    width: 54,
-    height: 54,
-    borderRadius: 27,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
   },
   roleBadge: {
-    minHeight: 34,
+    minHeight: 30,
     borderRadius: 999,
     borderWidth: 1,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
@@ -635,14 +638,14 @@ const styles = StyleSheet.create({
   },
   roleTitle: {
     color: authColors.ink,
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: "800",
-    marginBottom: 8,
+    marginBottom: 6,
   },
   roleSubtitle: {
     color: "#516173",
-    fontSize: 14,
-    lineHeight: 21,
+    fontSize: 13,
+    lineHeight: 19,
   },
   formCard: {
     backgroundColor: authColors.white,

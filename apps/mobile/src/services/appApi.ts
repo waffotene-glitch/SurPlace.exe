@@ -25,8 +25,8 @@ export function getPlateDetails(plateId: string) {
   return apiRequest<PlateDetailsResponse>(`/plates/${plateId}`);
 }
 
-export function getFeed() {
-  return apiRequest<{ items: Review[] }>("/reviews/feed");
+export function getFeed(token?: string | null) {
+  return apiRequest<{ items: Review[] }>("/reviews/feed", token ? { token } : undefined);
 }
 
 export function createReview(
@@ -57,7 +57,7 @@ export function createReview(
 }
 
 export function likeReview(token: string, reviewId: string) {
-  return apiRequest<{ likesCount: number }>(`/reviews/${reviewId}/like`, {
+  return apiRequest<{ likesCount: number; liked: boolean }>(`/reviews/${reviewId}/like`, {
     method: "POST",
     token,
   });

@@ -13,6 +13,8 @@ export function ReviewCameraScreen({ route, navigation }: { route: any; navigati
   const [isRecording, setIsRecording] = useState(false);
   const { updateDraft } = useReviewDraft();
   const captureMode = route.params?.captureMode === "video" ? "video" : "image";
+  const recordWithSound = route.params?.recordWithSound !== false;
+  const shouldUseMicrophone = captureMode === "video" && recordWithSound;
 
   if (!permission) {
     return (
@@ -22,7 +24,7 @@ export function ReviewCameraScreen({ route, navigation }: { route: any; navigati
     );
   }
 
-  if (captureMode === "video" && !microphonePermission) {
+  if (shouldUseMicrophone && !microphonePermission) {
     return (
       <View style={styles.permissionScreen}>
         <Text style={styles.permissionTitle}>Loading microphone permission...</Text>
@@ -42,12 +44,12 @@ export function ReviewCameraScreen({ route, navigation }: { route: any; navigati
     );
   }
 
-  if (captureMode === "video" && !microphonePermission?.granted) {
+  if (shouldUseMicrophone && !microphonePermission?.granted) {
     return (
       <View style={styles.permissionScreen}>
         <Text style={styles.permissionTitle}>Microphone permission</Text>
         <Text style={styles.permissionBody}>
-          Microphone access is needed to record a live review video.
+          Microphone access is needed to record a live review video with sound.
         </Text>
         <Button label="Allow microphone" onPress={() => void requestMicrophonePermission()} />
       </View>
@@ -61,7 +63,7 @@ export function ReviewCameraScreen({ route, navigation }: { route: any; navigati
         facing="back"
         ref={cameraRef}
         mode={captureMode === "video" ? "video" : "picture"}
-        mute={false}
+        mute={!recordWithSound}
         videoQuality={captureMode === "video" ? "480p" : undefined}
         videoBitrate={captureMode === "video" ? 1_200_000 : undefined}
       />
@@ -89,7 +91,9 @@ export function ReviewCameraScreen({ route, navigation }: { route: any; navigati
         </Text>
         <Text style={styles.guideBody}>
           {captureMode === "video"
-            ? "Keep the dish centered and speak naturally if you want audio."
+            ? recordWithSound
+              ? "Keep the dish centered and speak naturally if you want audio."
+              : "Keep the dish centered. This clip will be captured without audio."
             : "Frame the dish clearly before taking the shot."}
         </Text>
       </View>
@@ -97,7 +101,9 @@ export function ReviewCameraScreen({ route, navigation }: { route: any; navigati
       <View style={styles.bottomPanel}>
         <Text style={styles.bottomText}>
           {captureMode === "video"
-            ? "Record one live review video. It will upload only after review submission."
+            ? recordWithSound
+              ? "Record one live review video with sound. It will upload only after review submission."
+              : "Record one live review video without sound. It will upload only after review submission."
             : "Capture one live review photo. It will upload only after review submission."}
         </Text>
 

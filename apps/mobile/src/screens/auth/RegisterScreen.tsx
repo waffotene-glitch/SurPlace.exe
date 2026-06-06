@@ -30,14 +30,8 @@ export function RegisterScreen({ navigation }: { navigation: any }) {
   return (
     <AuthPlainScaffold>
       <AuthTopHeader
-        title="Create your SurPlace account"
-        subtitle={
-          step === "role"
-            ? "Choose your account type."
-            : role === "manager"
-              ? "Set up your restaurant manager account."
-              : "Set up your discovery and review account."
-        }
+        title="Create account"
+        subtitle={step === "role" ? "Choose your role to continue." : "Add your details to continue."}
         onBack={() => {
           if (step === "form") {
             setStep("role");
@@ -49,13 +43,9 @@ export function RegisterScreen({ navigation }: { navigation: any }) {
       />
 
       {step === "role" ? (
-        <>
+        <View style={styles.roleStep}>
           <View style={styles.roleSectionHeader}>
             <Text style={styles.roleEyebrow}>Step 1 of 2</Text>
-            <Text style={styles.roleTitle}>Choose your account type</Text>
-            <Text style={styles.roleSubtitle}>
-              Pick the experience that matches how you want to use SurPlace.
-            </Text>
           </View>
           <AuthRoleCard
             title="Discover & Review"
@@ -85,9 +75,9 @@ export function RegisterScreen({ navigation }: { navigation: any }) {
               onPress={() => navigation.navigate("Login")}
             />
           </View>
-        </>
+        </View>
       ) : (
-          <AuthFormCard
+        <AuthFormCard
           title={role === "manager" ? "Create your manager account" : "Create your user account"}
           subtitle={role === "manager" ? "Step 2 of 2. Add your details to manage your restaurant." : "Step 2 of 2. Add your details to start discovering and reviewing."}
         >
@@ -180,8 +170,12 @@ export function RegisterScreen({ navigation }: { navigation: any }) {
 }
 
 const styles = StyleSheet.create({
+  roleStep: {
+    width: "100%",
+  },
   roleSectionHeader: {
-    marginBottom: 20,
+    alignItems: "center",
+    marginBottom: 10,
   },
   roleEyebrow: {
     color: "#ff6b00",
@@ -190,17 +184,6 @@ const styles = StyleSheet.create({
     letterSpacing: 1.1,
     textTransform: "uppercase",
     marginBottom: 8,
-  },
-  roleTitle: {
-    color: "#001e36",
-    fontSize: 28,
-    fontWeight: "800",
-    marginBottom: 10,
-  },
-  roleSubtitle: {
-    color: "#667085",
-    fontSize: 15,
-    lineHeight: 22,
   },
   selectedRoleBanner: {
     borderRadius: 16,
