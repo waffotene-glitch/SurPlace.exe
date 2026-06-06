@@ -32,6 +32,29 @@ const protect = asyncHandler(async (req, res, next) => {
   next();
 });
 
+const optionalProtect = asyncHandler(async (req, _res, next) => {
+  const authHeader = req.headers.authorization || "";
+  const token = authHeader.startsWith("Bearer ")
+    ? authHeader.split(" ")[1]
+    : null;
+
+  if (!token) {
+    next();
+    return;
+  }
+
+  try {
+    const decoded = jwt.verify(token, env.jwtSecret);
+    const user = await User.findById(decoded.sub);
+    if (user) {
+      req.user = user;
+    }
+  } catch (_error) {
+  }
+
+  next();
+});
+
 const authorize = (...roles) => (req, res, next) => {
   if (!req.user || !roles.includes(req.user.role)) {
     res.status(403);
@@ -41,5 +64,5 @@ const authorize = (...roles) => (req, res, next) => {
   next();
 };
 
-module.exports = { protect, authorize };
+module.exports = { protect, optionalProtect, authorize };
 

@@ -9,7 +9,7 @@ const { createServiceError } = require("./serviceError");
 
 
 class ReviewService {
-  async listFeed() {
+  async listFeed({ userId = null } = {}) {
     const reviews = await Review.find({})
       .populate("user", "fullName avatarUrl")
       .populate("restaurant", "_id name")
@@ -17,7 +17,22 @@ class ReviewService {
       .sort({ createdAt: -1 })
       .limit(20);
 
-    return { items: reviews };
+    if (!userId) {
+      return { items: reviews };
+    }
+
+    const likes = await Like.find({
+      user: userId,
+      review: { $in: reviews.map((review) => review._id) },
+    }).select("review");
+    const likedReviewIds = new Set(likes.map((like) => String(like.review)));
+
+    return {
+      items: reviews.map((review) => ({
+        ...review.toObject(),
+        likedByCurrentUser: likedReviewIds.has(String(review._id)),
+      })),
+    };
   }
 
   validateReviewPayload(data) {
@@ -143,6 +158,11 @@ class ReviewService {
       },
     });
 
+    await this.recalculateTargetRatings({
+      restaurantId: restaurant._id,
+      plateId: plate ? plate._id : null,
+    });
+
     return {
       statusCode: 201,
       body: { review },
@@ -158,31 +178,76 @@ class ReviewService {
       throw createServiceError(404, "Review not found");
     }
 
-    try {
-      await Like.create({
-        user: userId,
-        review: review._id,
-      });
-    } catch (error) {
-      if (error.code === 11000) {
-        throw createServiceError(409, "Review already liked by this user");
-      }
+    const existingLike = await Like.findOne({ user: userId, review: review._id });
+    const liked = !existingLike;
 
-      throw error;
+    if (existingLike) {
+      await existingLike.deleteOne();
+    } else {
+      try {
+        await Like.create({
+          user: userId,
+          review: review._id,
+        });
+      } catch (error) {
+        if (error.code !== 11000) {
+          throw error;
+        }
+      }
     }
 
+    const likesCount = await Like.countDocuments({ review: review._id });
     const updatedReview = await Review.findByIdAndUpdate(
       review._id,
-      { $inc: { likesCount: 1 } },
+      { likesCount },
       { new: true }
     );
 
     return {
-      statusCode: 201,
-      body: { likesCount: updatedReview.likesCount },
+      statusCode: 200,
+      body: { likesCount: updatedReview.likesCount, liked },
     };
   }
-  
+
+  async recalculateTargetRatings({ restaurantId, plateId = null }) {
+    const restaurantStats = await Review.aggregate([
+      { $match: { restaurant: restaurantId } },
+      {
+        $group: {
+          _id: "$restaurant",
+          averageRating: { $avg: "$rating" },
+          totalReviews: { $sum: 1 },
+        },
+      },
+    ]);
+    const restaurantAggregate = restaurantStats[0] ?? { averageRating: 0, totalReviews: 0 };
+
+    await Restaurant.findByIdAndUpdate(restaurantId, {
+      averageRating: Number(restaurantAggregate.averageRating.toFixed(1)),
+      totalReviews: restaurantAggregate.totalReviews,
+    });
+
+    if (!plateId) {
+      return;
+    }
+
+    const plateStats = await Review.aggregate([
+      { $match: { plate: plateId } },
+      {
+        $group: {
+          _id: "$plate",
+          averageRating: { $avg: "$rating" },
+          totalReviews: { $sum: 1 },
+        },
+      },
+    ]);
+    const plateAggregate = plateStats[0] ?? { averageRating: 0, totalReviews: 0 };
+
+    await Plate.findByIdAndUpdate(plateId, {
+      averageRating: Number(plateAggregate.averageRating.toFixed(1)),
+      totalReviews: plateAggregate.totalReviews,
+    });
+  }
 }
 
 
