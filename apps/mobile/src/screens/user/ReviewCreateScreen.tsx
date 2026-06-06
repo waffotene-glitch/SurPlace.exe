@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Image, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from "react-native";
 import { Video, ResizeMode } from "expo-av";
 import { Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
@@ -34,6 +34,7 @@ export function ReviewCreateScreen({ route, navigation }: { route: any; navigati
   const { restaurantId, restaurantName, plateId, plateName } = route.params ?? {};
   const { isLoading, error, run, setError } = useAsyncTask();
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [recordWithSound, setRecordWithSound] = useState(true);
 
   useEffect(() => {
     const nextPlateId = plateId ?? null;
@@ -135,7 +136,7 @@ export function ReviewCreateScreen({ route, navigation }: { route: any; navigati
         </Pressable>
 
         <Pressable
-          onPress={() => navigation.navigate("ReviewCamera", { captureMode: "video" })}
+          onPress={() => navigation.navigate("ReviewCamera", { captureMode: "video", recordWithSound })}
           style={[
             styles.captureCard,
             styles.captureCardDark,
@@ -158,6 +159,21 @@ export function ReviewCreateScreen({ route, navigation }: { route: any; navigati
             </View>
           </View>
         </Pressable>
+
+        <View style={styles.soundOptionCard}>
+          <View style={styles.soundOptionTextWrap}>
+            <Text style={styles.soundOptionTitle}>Record with sound</Text>
+            <Text style={styles.soundOptionBody}>
+              {recordWithSound ? "Microphone permission will be requested." : "Video will be recorded without audio."}
+            </Text>
+          </View>
+          <Switch
+            value={recordWithSound}
+            onValueChange={setRecordWithSound}
+            trackColor={{ false: "#d1d5db", true: "#f6a27d" }}
+            thumbColor={recordWithSound ? "#f26b3a" : "#f9fafb"}
+          />
+        </View>
       </View>
 
       {draft.capturedMediaUri ? (
@@ -208,38 +224,38 @@ export function ReviewCreateScreen({ route, navigation }: { route: any; navigati
           const capturedMediaType = draft.capturedMediaType;
 
           void run(async () => {
-            let submittedCoordinates:
-              | {
-                  lat: number;
-                  lng: number;
-                }
-              | undefined;
-
             setStatusMessage("Getting location...");
 
+            let permission: Location.LocationPermissionResponse;
             try {
-              const permission = await withTimeout(
+              permission = await withTimeout(
                 Location.requestForegroundPermissionsAsync(),
                 10000,
-                "Location permission request timed out."
+                "Location permission is required to submit a review."
               );
-
-              if (permission.status === "granted") {
-                try {
-                  const currentPosition = await withTimeout(
-                    Location.getCurrentPositionAsync({}),
-                    12000,
-                    "Fetching your location timed out."
-                  );
-                  submittedCoordinates = {
-                    lat: currentPosition.coords.latitude,
-                    lng: currentPosition.coords.longitude,
-                  };
-                } catch (_locationError) {
-                }
-              }
             } catch (_permissionError) {
+              throw new Error("Location permission is required to submit a review.");
             }
+
+            if (permission.status !== "granted") {
+              throw new Error("Location permission is required to submit a review.");
+            }
+
+            let currentPosition: Location.LocationObject;
+            try {
+              currentPosition = await withTimeout(
+                Location.getCurrentPositionAsync({}),
+                12000,
+                "We could not get your location. Please try again."
+              );
+            } catch (_locationError) {
+              throw new Error("We could not get your location. Please try again.");
+            }
+
+            const submittedCoordinates = {
+              lat: currentPosition.coords.latitude,
+              lng: currentPosition.coords.longitude,
+            };
 
             setStatusMessage("Uploading media...");
             const uploadedMedia = await uploadReviewMedia({
@@ -457,6 +473,31 @@ const styles = StyleSheet.create({
   },
   captureBodyDark: {
     color: "#d4d4d8",
+  },
+  soundOptionCard: {
+    borderRadius: 18,
+    backgroundColor: "#ffffff",
+    borderWidth: 1,
+    borderColor: "#f0dfd6",
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 12,
+  },
+  soundOptionTextWrap: {
+    flex: 1,
+  },
+  soundOptionTitle: {
+    color: "#18181b",
+    fontSize: 15,
+    fontWeight: "800",
+    marginBottom: 4,
+  },
+  soundOptionBody: {
+    color: "#6b7280",
+    lineHeight: 19,
   },
   previewCard: {
     backgroundColor: "#ffffff",

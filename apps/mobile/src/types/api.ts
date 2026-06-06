@@ -62,6 +62,7 @@ export type Review = {
     source: "camera";
   }>;
   likesCount: number;
+  likedByCurrentUser?: boolean;
   createdAt: string;
   user?: {
     fullName: string;

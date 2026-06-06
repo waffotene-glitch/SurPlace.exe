@@ -165,6 +165,21 @@ export function ManagerPlatesScreen() {
   const activeError = uploadTask.error || saveTask.error || deleteTask.error;
   const activePreviewUri = localImagePreviewUri || imageUrl;
   const isBusy = uploadTask.isLoading || saveTask.isLoading || deleteTask.isLoading;
+  const getValidatedPrice = () => {
+    const normalizedPrice = price.trim();
+
+    if (!normalizedPrice) {
+      return null;
+    }
+
+    const numericPrice = Number(normalizedPrice);
+
+    if (!Number.isFinite(numericPrice) || numericPrice < 0) {
+      throw new Error("Price must be a non-negative number.");
+    }
+
+    return numericPrice;
+  };
 
   return (
     <ManagerScreen scroll>
@@ -276,19 +291,21 @@ export function ManagerPlatesScreen() {
           }
 
           void saveTask.run(async () => {
+            const validatedPrice = getValidatedPrice();
+
             if (editingPlateId) {
               await updateManagerPlate(token, editingPlateId, {
                 name,
                 description,
                 imageUrl,
-                price: price ? Number(price) : null,
+                price: validatedPrice,
               });
             } else {
               await createManagerPlate(token, {
                 name,
                 description,
                 imageUrl,
-                price: price ? Number(price) : null,
+                price: validatedPrice,
                 isAvailable: true,
               });
             }

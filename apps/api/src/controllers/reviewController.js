@@ -1,8 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const reviewService = require("../services/ReviewService");
 
-const listFeed = asyncHandler(async (_req, res) => {
-  const result = await reviewService.listFeed();
+const listFeed = asyncHandler(async (req, res) => {
+  const result = await reviewService.listFeed({ userId: req.user?._id });
   res.json(result);
 });
 

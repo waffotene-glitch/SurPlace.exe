@@ -14,7 +14,13 @@ const protect = asyncHandler(async (req, res, next) => {
     throw new Error("Authentication required");
   }
 
-  const decoded = jwt.verify(token, env.jwtSecret);
+  let decoded;
+  try {
+    decoded = jwt.verify(token, env.jwtSecret);
+  } catch (error) {
+    res.status(401);
+    throw new Error(error.name === "TokenExpiredError" ? "Token expired" : "Invalid token");
+  }
   const user = await User.findById(decoded.sub);
 
   if (!user) {
@@ -23,6 +29,29 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 
   req.user = user;
+  next();
+});
+
+const optionalProtect = asyncHandler(async (req, _res, next) => {
+  const authHeader = req.headers.authorization || "";
+  const token = authHeader.startsWith("Bearer ")
+    ? authHeader.split(" ")[1]
+    : null;
+
+  if (!token) {
+    next();
+    return;
+  }
+
+  try {
+    const decoded = jwt.verify(token, env.jwtSecret);
+    const user = await User.findById(decoded.sub);
+    if (user) {
+      req.user = user;
+    }
+  } catch (_error) {
+  }
+
   next();
 });
 
@@ -35,5 +64,5 @@ const authorize = (...roles) => (req, res, next) => {
   next();
 };
 
-module.exports = { protect, authorize };
+module.exports = { protect, optionalProtect, authorize };
 

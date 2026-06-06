@@ -4,10 +4,21 @@ const notFoundHandler = (req, res, next) => {
 };
 
 const errorHandler = (error, _req, res, _next) => {
-  const statusCode = res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
+  let statusCode = res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
+  let message = error.message;
+
+  if (error.type === "entity.parse.failed" || error instanceof SyntaxError) {
+    statusCode = 400;
+    message = "Malformed JSON body";
+  }
+
+  if (error.name === "CastError") {
+    statusCode = 400;
+    message = `${error.path || "id"} is invalid`;
+  }
 
   res.status(statusCode).json({
-    message: error.message,
+    message,
   });
 };
 
