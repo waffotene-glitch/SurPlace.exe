@@ -105,10 +105,16 @@ class ReviewService {
     const hasSubmittedCoordinates =
       submittedCoordinates &&
       typeof submittedCoordinates.lat === "number" &&
-      typeof submittedCoordinates.lng === "number";
+      typeof submittedCoordinates.lng === "number" &&
+      Number.isFinite(submittedCoordinates.lat) &&
+      Number.isFinite(submittedCoordinates.lng);
 
     let distanceMeters = null;
     let isWithinAllowedRadius = false;
+
+    if (!hasSubmittedCoordinates) {
+      throw createServiceError(400, "Location permission is required to submit a review.");
+    }
 
     if (hasSubmittedCoordinates) {
       const restaurantPoint = restaurant.location?.coordinates?.coordinates;
@@ -130,13 +136,6 @@ class ReviewService {
     }
 
     if (env.enforceLocationVerification) {
-      if (!hasSubmittedCoordinates) {
-        throw createServiceError(
-          403,
-          "Location permission is required while strict location verification is enabled"
-        );
-      }
-
       if (!isWithinAllowedRadius) {
         throw createServiceError(403, "You must be near this restaurant to submit a verified review");
       }
