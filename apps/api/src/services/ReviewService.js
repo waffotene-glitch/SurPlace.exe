@@ -4,6 +4,7 @@ const Restaurant = require("../models/Restaurant");
 const Review = require("../models/Review");
 const Like = require("../models/Like");
 const { calculateDistanceMeters } = require("../utils/geo");
+const { assertObjectId } = require("../utils/validators");
 const { createServiceError } = require("./serviceError");
 
 
@@ -26,8 +27,18 @@ class ReviewService {
       throw createServiceError(400, "restaurantId is required");
     }
 
+    assertObjectId(restaurantId, "restaurantId");
+
+    if (data.plateId) {
+      assertObjectId(data.plateId, "plateId");
+    }
+
     if (typeof rating !== "number" || rating < 1 || rating > 5) {
       throw createServiceError(400, "rating must be between 1 and 5");
+    }
+
+    if (!Array.isArray(media)) {
+      throw createServiceError(400, "media must be an array");
     }
 
     if (media.some((item) => item.source && item.source !== "camera")) {
@@ -85,9 +96,18 @@ class ReviewService {
     let isWithinAllowedRadius = false;
 
     if (hasSubmittedCoordinates) {
+      const restaurantPoint = restaurant.location?.coordinates?.coordinates;
+      if (
+        !Array.isArray(restaurantPoint) ||
+        restaurantPoint.length !== 2 ||
+        restaurantPoint.some((value) => typeof value !== "number" || Number.isNaN(value))
+      ) {
+        throw createServiceError(400, "Restaurant location coordinates are unavailable");
+      }
+
       const restaurantCoordinates = {
-        lng: restaurant.location.coordinates.coordinates[0],
-        lat: restaurant.location.coordinates.coordinates[1],
+        lng: restaurantPoint[0],
+        lat: restaurantPoint[1],
       };
 
       distanceMeters = calculateDistanceMeters(submittedCoordinates, restaurantCoordinates);
@@ -130,6 +150,8 @@ class ReviewService {
   }
 
   async likeReview({ userId, reviewId }) {
+    assertObjectId(reviewId, "reviewId");
+
     const review = await Review.findById(reviewId);
 
     if (!review) {
@@ -149,12 +171,15 @@ class ReviewService {
       throw error;
     }
 
-    review.likesCount += 1;
-    await review.save();
+    const updatedReview = await Review.findByIdAndUpdate(
+      review._id,
+      { $inc: { likesCount: 1 } },
+      { new: true }
+    );
 
     return {
       statusCode: 201,
-      body: { likesCount: review.likesCount },
+      body: { likesCount: updatedReview.likesCount },
     };
   }
   

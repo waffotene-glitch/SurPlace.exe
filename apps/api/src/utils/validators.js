@@ -29,7 +29,9 @@ const normalizeRole = (role) => {
 
 const assertObjectId = (value, fieldName) => {
   if (!mongoose.Types.ObjectId.isValid(value)) {
-    throw new Error(`${fieldName} is invalid`);
+    const error = new Error(`${fieldName} is invalid`);
+    error.statusCode = 400;
+    throw error;
   }
 };
 
@@ -40,7 +42,9 @@ const assertCoordinates = (coordinates, fieldName) => {
     coordinates.length !== 2 ||
     coordinates.some((value) => typeof value !== "number" || Number.isNaN(value))
   ) {
-    throw new Error(`${fieldName} must be [lng, lat]`);
+    const error = new Error(`${fieldName} must be [lng, lat]`);
+    error.statusCode = 400;
+    throw error;
   }
 };
 

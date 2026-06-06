@@ -48,6 +48,7 @@ export function FeedScreen({ navigation }: { navigation: any }) {
   const [items, setItems] = useState<Review[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [likedReviewIds, setLikedReviewIds] = useState<string[]>([]);
+  const [pendingLikeIds, setPendingLikeIds] = useState<string[]>([]);
 
   const load = async () => {
     setIsLoading(true);
@@ -169,20 +170,31 @@ export function FeedScreen({ navigation }: { navigation: any }) {
                 {token ? (
                   <Pressable
                     onPress={() => {
-                      if (likedReviewIds.includes(item._id)) {
+                      if (likedReviewIds.includes(item._id) || pendingLikeIds.includes(item._id)) {
                         return;
                       }
 
-                      void likeReview(token, item._id).then((response) => {
-                        setItems((current) =>
-                          current.map((review) =>
-                            review._id === item._id
-                              ? { ...review, likesCount: response.likesCount }
-                              : review
-                          )
-                        );
-                        setLikedReviewIds((current) => [...current, item._id]);
-                      });
+                      setPendingLikeIds((current) => [...current, item._id]);
+                      void likeReview(token, item._id)
+                        .then((response) => {
+                          setItems((current) =>
+                            current.map((review) =>
+                              review._id === item._id
+                                ? { ...review, likesCount: response.likesCount }
+                                : review
+                            )
+                          );
+                          setLikedReviewIds((current) =>
+                            current.includes(item._id) ? current : [...current, item._id]
+                          );
+                        })
+                        .catch(() => {
+                        })
+                        .finally(() => {
+                          setPendingLikeIds((current) =>
+                            current.filter((reviewId) => reviewId !== item._id)
+                          );
+                        });
                     }}
                     style={[
                       styles.likeButton,

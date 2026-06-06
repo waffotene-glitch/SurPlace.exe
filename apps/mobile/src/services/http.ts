@@ -39,7 +39,13 @@ export async function apiRequest<T>(
   clearTimeout(timeoutId);
 
   const text = await response.text();
-  const data = text ? JSON.parse(text) : null;
+  let data: any = null;
+
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch (_parseError) {
+    data = null;
+  }
 
   if (!response.ok) {
     throw new Error(data?.message || "Request failed");

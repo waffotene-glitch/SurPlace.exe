@@ -2,6 +2,7 @@ const Plate = require("../models/Plate");
 const Restaurant = require("../models/Restaurant");
 const Review = require("../models/Review");
 const { mapPlate, mapRestaurant } = require("../utils/responseMappers");
+const { assertObjectId } = require("../utils/validators");
 const { createServiceError } = require("./serviceError");
 
 class RestaurantService {
@@ -24,6 +25,8 @@ class RestaurantService {
   }
 
   async getRestaurantDetails(restaurantId) {
+    assertObjectId(restaurantId, "restaurantId");
+
     const restaurant = await Restaurant.findById(restaurantId);
 
     if (!restaurant) {
@@ -60,14 +63,14 @@ class RestaurantService {
       throw createServiceError(400, "name is required");
     }
 
-    if (!location || !location.address || !location.coordinates) {
+    if (!location || !location.address || !location.address.trim() || !location.coordinates) {
       throw createServiceError(400, "location with address and coordinates is required");
     }
 
     if (
       !Array.isArray(location.coordinates) ||
       location.coordinates.length !== 2 ||
-      location.coordinates.some((value) => typeof value !== "number")
+      location.coordinates.some((value) => typeof value !== "number" || !Number.isFinite(value))
     ) {
       throw createServiceError(400, "location.coordinates must be [lng, lat]");
     }

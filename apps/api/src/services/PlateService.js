@@ -22,10 +22,16 @@ class PlateService {
   }
 
   async getPlateDetails(plateId) {
+    assertObjectId(plateId, "plateId");
+
     const plate = await Plate.findById(plateId).populate("restaurant");
 
     if (!plate) {
       throw createServiceError(404, "Plate not found");
+    }
+
+    if (!plate.restaurant) {
+      throw createServiceError(404, "Restaurant not found for this plate");
     }
 
     const reviews = await Review.find({ plate: plate._id })
@@ -68,6 +74,10 @@ class PlateService {
       throw createServiceError(400, "name is required");
     }
 
+    if (price !== null && (typeof price !== "number" || !Number.isFinite(price) || price < 0)) {
+      throw createServiceError(400, "price must be a non-negative number");
+    }
+
     const plate = await Plate.create({
       restaurant: managedRestaurant._id,
       name: name.trim(),
@@ -84,6 +94,8 @@ class PlateService {
   }
 
   async updateManagedPlate(managedRestaurant, plateId, data) {
+    assertObjectId(plateId, "plateId");
+
     const plate = await Plate.findOne({
       _id: plateId,
       restaurant: managedRestaurant._id,
@@ -112,6 +124,10 @@ class PlateService {
     }
 
     if (price !== undefined) {
+      if (price !== null && (typeof price !== "number" || !Number.isFinite(price) || price < 0)) {
+        throw createServiceError(400, "price must be a non-negative number");
+      }
+
       plate.price = price;
     }
 
@@ -125,6 +141,8 @@ class PlateService {
   }
 
   async deleteManagedPlate(managedRestaurant, plateId) {
+    assertObjectId(plateId, "plateId");
+
     const plate = await Plate.findOne({
       _id: plateId,
       restaurant: managedRestaurant._id,
