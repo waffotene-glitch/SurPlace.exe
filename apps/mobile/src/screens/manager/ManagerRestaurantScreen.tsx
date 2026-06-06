@@ -66,7 +66,7 @@ export function ManagerRestaurantScreen() {
           setUploadStatus(null);
           setLocationMessage(
             response.restaurant.location.coordinates.coordinates?.length
-              ? "Location selected"
+              ? response.restaurant.location.address || "Location selected"
               : null
           );
           formTask.setError(null);
@@ -241,17 +241,18 @@ export function ManagerRestaurantScreen() {
         subtitle="Choose where guests can find you."
       />
       <ManagerCard>
-        <ManagerLabel>Address</ManagerLabel>
-        <ManagerInput value={address} onChangeText={setAddress} placeholder="Restaurant address" />
         <ManagerButton
           label="Use my current location"
           variant="secondary"
           disabled={isBusy}
           onPress={() => {
             void formTask.run(async () => {
+              formTask.setError(null);
+              setLocationMessage(null);
+
               const permission = await Location.requestForegroundPermissionsAsync();
               if (permission.status !== "granted") {
-                setLocationMessage("Location permission was denied.");
+                setLocationMessage("Location permission is required to set your restaurant location.");
                 return;
               }
 
@@ -270,16 +271,19 @@ export function ManagerRestaurantScreen() {
                 const readableAddress = formatAddress(results[0] ?? null);
                 if (readableAddress) {
                   setAddress(readableAddress);
+                  setLocationMessage(readableAddress);
+                  return;
                 }
               } catch (_reverseGeocodeError) {
               }
 
+              setAddress("Current location");
               setLocationMessage("Location selected");
             });
           }}
         />
         <ManagerInfoText tone={coordinates ? "success" : "muted"}>
-          {coordinates ? "Location selected" : "No location selected yet."}
+          {coordinates ? address || "Location selected" : "No location selected yet."}
         </ManagerInfoText>
         {locationMessage ? <Text style={styles.locationMessage}>{locationMessage}</Text> : null}
       </ManagerCard>
@@ -300,7 +304,7 @@ export function ManagerRestaurantScreen() {
 
           void formTask.run(async () => {
             if (!coordinates) {
-              throw new Error("Use your current location before saving the restaurant");
+              throw new Error("Please select your restaurant location before continuing.");
             }
 
             await saveManagerRestaurant(

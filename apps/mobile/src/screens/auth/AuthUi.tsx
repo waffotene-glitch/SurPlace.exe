@@ -263,14 +263,14 @@ export function AuthFormCard({
   subtitle,
   children,
 }: {
-  title: string;
-  subtitle: string;
+  title?: string;
+  subtitle?: string;
   children: React.ReactNode;
 }) {
   return (
     <View style={styles.formCard}>
-      <Text style={styles.formCardTitle}>{title}</Text>
-      <Text style={styles.formCardSubtitle}>{subtitle}</Text>
+      {title ? <Text style={styles.formCardTitle}>{title}</Text> : null}
+      {subtitle ? <Text style={styles.formCardSubtitle}>{subtitle}</Text> : null}
       {children}
     </View>
   );
@@ -649,11 +649,11 @@ const styles = StyleSheet.create({
   },
   formCard: {
     backgroundColor: authColors.white,
-    borderRadius: 24,
-    paddingHorizontal: 22,
-    paddingTop: 24,
-    paddingBottom: 18,
-    marginTop: 8,
+    borderRadius: 20,
+    paddingHorizontal: 18,
+    paddingTop: 18,
+    paddingBottom: 16,
+    marginTop: 4,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.08,
