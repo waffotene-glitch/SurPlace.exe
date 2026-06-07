@@ -1,10 +1,11 @@
 {
   "expo": {
-    "name": "Verified Food Review",
+    "name": "SurplaceApp",
     "slug": "verified-food-review",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
+    "icon": "./assets/icon.png",
     "plugins": [
       "expo-build-properties",
       "expo-secure-store"
@@ -22,8 +23,10 @@
         "NSCameraUsageDescription": "Camera access is required to capture live review photos and manager plate images.",
         "NSLocationWhenInUseUsageDescription": "Location access is required to verify that reviews are posted on-site.",
         "NSMicrophoneUsageDescription": "Microphone access is required to record live review videos.",
-        "NSPhotoLibraryUsageDescription": "Photo library access is required so managers can choose plate images from the gallery."
-      }
+        "NSPhotoLibraryUsageDescription": "Photo library access is required so managers can choose plate images from the gallery.",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "bundleIdentifier": "com.surplace.app"
     },
     "android": {
       "permissions": [
