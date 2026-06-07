@@ -10,8 +10,7 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
-    "lint": "echo \"Add mobile linting in next phase\"",
-    "eas-build-pre-install": "npm config set legacy-peer-deps true"
+    "lint": "echo \"Add mobile linting in next phase\""
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.6.1",
