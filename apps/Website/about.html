@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us | SurPlace</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+      background-color: #fefaf5;
+      color: #1e1e2a;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Header */
+    .site-header {
+      background: white;
+      border-bottom: 1px solid #f0e3d8;
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand {
+      font-size: 1.8rem;
+      font-weight: 800;
+      text-decoration: none;
+      background: linear-gradient(135deg, #c26e2e, #e09d5e);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    nav {
+      display: flex;
+      gap: 2rem;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #4a4a5a;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    nav a.active {
+      color: #c26e2e;
+      border-bottom: 2px solid #c26e2e;
+      padding-bottom: 0.25rem;
+    }
+
+    nav a:hover {
+      color: #c26e2e;
+    }
+
+    /* Team Hero Section */
+    .team-hero {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+      padding: 3rem 0 2rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-copy {
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .team-image {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* RESIZED: Team photo reduced for harmony */
+    .team-image img {
+      width: 100%;
+      max-width: 420px;
+      height: auto;
+      border-radius: 36px;
+      box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.2);
+      object-fit: cover;
+      transition: transform 0.2s;
+    }
+
+    .team-image img:hover {
+      transform: scale(1.01);
+    }
+
+    .eyebrow {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 600;
+      color: #c26e2e;
+      background: #faeadf;
+      display: inline-block;
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-copy p {
+      font-size: 1.1rem;
+      color: #5a5a6e;
+    }
+
+    /* Team Section */
+    .team-section {
+      padding: 4rem 0;
+    }
+
+    .team-section h2 {
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .team-section > p {
+      text-align: center;
+      color: #5a5a6e;
+      margin-bottom: 3rem;
+    }
+
+    /* Team Grid with Hover Blur Effect */
+    .team-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+    }
+
+    .team-card {
+      flex: 1 1 220px;
+      max-width: 260px;
+      background: white;
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .team-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.12);
+    }
+
+    /* Card Image Container - Large and Clear */
+    .card-image {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      background: linear-gradient(135deg, #f0e3d8, #e8d5c4);
+    }
+
+    .team-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: filter 0.35s ease, transform 0.3s ease;
+      display: block;
+    }
+
+    /* HOVER BLUR EFFECT: When cursor on card, image becomes blur */
+    .team-card:hover .team-photo {
+      filter: blur(5px);
+      transform: scale(1.03);
+    }
+
+    /* Overlay that appears on hover with Name and Role */
+    .member-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(3px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      padding: 1rem;
+      color: white;
+    }
+
+    .team-card:hover .member-overlay {
+      opacity: 1;
+    }
+
+    .member-overlay h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .member-overlay .member-role {
+      font-size: 0.9rem;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.3rem 1rem;
+      border-radius: 60px;
+      margin-top: 0.3rem;
+    }
+
+    .member-overlay .member-initials {
+      font-size: 0.75rem;
+      opacity: 0.8;
+      margin-top: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    .card-info {
+      padding: 1rem;
+      text-align: center;
+      background: white;
+    }
+
+    .card-info h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .card-info p {
+      font-size: 0.85rem;
+      color: #c26e2e;
+      font-weight: 500;
+    }
+
+    /* About App Section */
+    .about-app {
+      padding: 4rem 0;
+      background: #fff9f2;
+      border-radius: 40px;
+      margin: 2rem 0;
+    }
+
+    .about-app h2 {
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .about-app > .container > p {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 3rem;
+      color: #5a5a6e;
+    }
+
+    .stats-grid {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .stat-card {
+      flex: 1;
+      min-width: 200px;
+      background: white;
+      padding: 1.8rem;
+      border-radius: 24px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: 1.2rem;
+      margin-bottom: 0.75rem;
+      color: #c26e2e;
+    }
+
+    .stat-card span {
+      color: #5a5a6e;
+      font-size: 0.9rem;
+    }
+
+    /* Footer */
+    .site-footer {
+      background: #1e1e2a;
+      color: #cfcfdf;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-inner a {
+      color: #e09d5e;
+      text-decoration: none;
+    }
+
+    .footer-inner a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .team-hero {
+        flex-direction: column;
+        text-align: center;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      .team-image img {
+        max-width: 300px;
+      }
+      .team-grid {
+        gap: 1.2rem;
+      }
+      .team-card {
+        max-width: 220px;
+      }
+      .stats-grid {
+        flex-direction: column;
+      }
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">SurPlace</a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="about.html" class="active">About Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="team-hero container">
+      <div class="hero-copy">
+        <span class="eyebrow">About SurPlace</span>
+        <h1>Meet the 5-person team behind SurPlace</h1>
+        <p>Our mission is to help food lovers discover authentic dining experiences with verified reviews and live food content.</p>
+      </div>
+      <div class="team-image">
+        <!-- RESIZED: Team photo reduced for harmony with the page -->
+        <img src="assets/WhatsApp Image 2026-06-05 at 17.04.43.jpeg" alt="SurPlace team photo" onerror="this.src='https://placehold.co/700x500?text=Team+Photo'">
+      </div>
+    </section>
+
+    <section class="team-section container">
+      <h2>Our Team</h2>
+      <p>Five dedicated members created SurPlace to bring transparency and trust to restaurant and plate reviews.</p>
+      <div class="team-grid">
+        <!-- Team Member 1 - Yves Kelian -->
+        <article class="team-card">
+          <div class="card-image">
+            <!-- Clear, large image - when hover, blur effect appears showing name and role -->
+<img class="team-photo" src="assets/Yves.jpeg" alt="Yves Kelian">            <div class="member-overlay">           
+              <h3>Yves Kelian</h3>
+              <div class="member-role">Scrum Master</div>
+              <div class="member-initials">Y.K</div>
+            </div>
+          </div>
+          <div class="card-info">
+            <h3>Yves Kelian</h3>
+            <p>Scrum Master</p>
+          </div>
+        </article>
+
+        <!-- Team Member 2 - Ahmad Said -->
+        <article class="team-card">
+          <div class="card-image">
+            <img class="team-photo" src="https://ui-avatars.com/api/?background=2C5F2D&color=fff&bold=true&size=240&fontsize=0.32&name=Ahmad+Said" alt="Ahmad Said">
+            <div class="member-overlay">
+              <h3>Ahmad Said</h3>
+              <div class="member-role">Finance & Strategy</div>
+              <div class="member-initials">A.S</div>
+            </div>
+          </div>
+          <div class="card-info">
+            <h3>Ahmad Said</h3>
+            <p>Something with money</p>
+          </div>
+        </article>
+
+        <!-- Team Member 3 - Tchinda Randy -->
+        <article class="team-card">
+          <div class="card-image">
+<img class="team-photo" src="assets/Randy.jpeg" alt="Tchinda Randy">            <div class="member-overlay">
+              <h3>Tchinda Randy</h3>
+              <div class="member-role">Developer</div>
+              <div class="member-initials">T.K</div>
+            </div>
+          </div>
+          <div class="card-info">
+            <h3>Tchinda Randy</h3>
+            <p>Dev. Team</p>
+          </div>
+        </article>
+
+        <!-- Team Member 4 - Bouyem Donald -->
+        <article class="team-card">
+          <div class="card-image">
+            <img class="team-photo" src="https://ui-avatars.com/api/?background=9B6A3E&color=fff&bold=true&size=240&fontsize=0.32&name=Bouyem+Donald" alt="Bouyem Donald">
+            <div class="member-overlay">
+              <h3>Bouyem Donald</h3>
+              <div class="member-role">Product Owner</div>
+              <div class="member-initials">B.D</div>
+            </div>
+          </div>
+          <div class="card-info">
+            <h3>Bouyem Donald</h3>
+            <p>Product Owner</p>
+          </div>
+        </article>
+
+        <!-- Team Member 5 - Owen Gaby -->
+        <article class="team-card">
+          <div class="card-image">
+            <img class="team-photo" src="https://ui-avatars.com/api/?background=AA6F5C&color=fff&bold=true&size=240&fontsize=0.32&name=Owen+Gaby" alt="Owen Gaby">
+            <div class="member-overlay">
+              <h3>Owen Gaby</h3>
+              <div class="member-role">Developer</div>
+              <div class="member-initials">O.G</div>
+            </div>
+          </div>
+          <div class="card-info">
+            <h3>Owen Gaby</h3>
+            <p>Dev. Team</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="about-app">
+      <div class="container">
+        <h2>How SurPlace Works</h2>
+        <p>SurPlace allows users to browse the latest food reviews, search for restaurants or plates, and submit authentic reviews with live media. The app is built for diners who want trusted recommendations from nearby food lovers.</p>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <strong> Restaurant reviews</strong>
+            <span>Live customer feedback on dining experiences.</span>
+          </div>
+          <div class="stat-card">
+            <strong> Plate reviews</strong>
+            <span>Showcase dishes with photos and ratings.</span>
+          </div>
+          <div class="stat-card">
+            <strong> Trusted discovery</strong>
+            <span>Find the best meals around you.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Explore SurPlace and see why live food reviews matter.</p>
+      <a href="index.html">Back to Home</a>
+    </div>
+  </footer>
+</body>
+</html>

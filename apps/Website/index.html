@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SurPlace | Live Food Reviews</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+      background-color: #fefaf5;
+      color: #1e1e2a;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Header */
+    .site-header {
+      background: white;
+      border-bottom: 1px solid #f0e3d8;
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand {
+      font-size: 1.8rem;
+      font-weight: 800;
+      text-decoration: none;
+      background: linear-gradient(135deg, #c26e2e, #e09d5e);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    nav {
+      display: flex;
+      gap: 2rem;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #4a4a5a;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    nav a.active {
+      color: #c26e2e;
+      border-bottom: 2px solid #c26e2e;
+      padding-bottom: 0.25rem;
+    }
+
+    nav a:hover {
+      color: #c26e2e;
+    }
+
+    /* Hero Section */
+    .hero {
+      display: flex;
+      align-items: center;
+      gap: 3rem;
+      padding: 4rem 0 3rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-copy {
+      flex: 1.2;
+      min-width: 280px;
+    }
+
+    .hero-image {
+      flex: 1;
+      min-width: 260px;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* RESIZED: Hero image reduced for harmony */
+    .hero-image img {
+      width: 100%;
+      max-width: 380px;
+      height: auto;
+      border-radius: 32px;
+      box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.2);
+      transition: transform 0.25s ease;
+      display: block;
+      object-fit: cover;
+    }
+
+    .hero-image img:hover {
+      transform: scale(1.02);
+    }
+
+    .eyebrow {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 600;
+      color: #c26e2e;
+      background: #faeadf;
+      display: inline-block;
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-copy p {
+      font-size: 1.1rem;
+      color: #5a5a6e;
+      margin: 1rem 0;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .button {
+      display: inline-block;
+      background: #1e1e2a;
+      color: white;
+      text-decoration: none;
+      padding: 0.8rem 1.8rem;
+      border-radius: 60px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .button-secondary {
+      background: transparent;
+      border-color: #1e1e2a;
+      color: #1e1e2a;
+    }
+
+    .button-secondary:hover {
+      background: #1e1e2a0c;
+      transform: translateY(-2px);
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      background: #2c2c3a;
+    }
+
+    /* Features Section */
+    .features {
+      display: flex;
+      gap: 2rem;
+      padding: 4rem 0;
+      flex-wrap: wrap;
+    }
+
+    .feature-card {
+      flex: 1;
+      background: white;
+      padding: 2rem;
+      border-radius: 28px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .feature-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+      color: #c26e2e;
+    }
+
+    .feature-card p {
+      color: #5a5a6e;
+    }
+
+    /* Gallery */
+    .gallery {
+      padding: 3rem 0;
+    }
+
+    .gallery h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .image-grid {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .image-grid img {
+      width: 100%;
+      max-width: 320px;
+      border-radius: 24px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+      object-fit: cover;
+      height: 400px;
+    }
+
+    .image-grid img:hover {
+      transform: scale(1.02);
+    }
+
+    /* About App Section */
+    .about-app {
+      display: flex;
+      gap: 3rem;
+      padding: 4rem 0;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .about-app > div:first-child {
+      flex: 1;
+    }
+
+    .about-app h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .stats-grid {
+      flex: 1;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-card {
+      flex: 1;
+      background: #fff2e6;
+      padding: 1.5rem;
+      border-radius: 20px;
+      text-align: center;
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      color: #c26e2e;
+    }
+
+    .stat-card span {
+      color: #5a5a6e;
+      font-size: 0.9rem;
+    }
+
+    /* Footer */
+    .site-footer {
+      background: #1e1e2a;
+      color: #cfcfdf;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-inner a {
+      color: #e09d5e;
+      text-decoration: none;
+    }
+
+    .footer-inner a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        flex-direction: column;
+        text-align: center;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      .hero-image img {
+        max-width: 280px;
+      }
+      .features {
+        flex-direction: column;
+      }
+      .about-app {
+        flex-direction: column;
+        text-align: center;
+      }
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">SurPlace</a>
+      <nav>
+        <a href="index.html" class="active">Home</a>
+        <a href="about.html">About Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero container">
+      <div class="hero-copy">
+        <span class="eyebrow">Verified Food Discovery</span>
+        <h1>Discover real restaurant and plate reviews with live photos/videos.</h1>
+        <p>SurPlace brings trusted local food reviews into one beautiful app. Browse community feedback, explore nearby restaurants, and capture live verified reviews while you eat.</p>
+        <div class="button-row">
+          <a class="button" href="about.html">Meet the Team</a>
+          <a class="button button-secondary" href="https://expo.dev/artifacts/eas/3KqwDsC7JLHvg279tPQYN4.apk" download>Download APK</a>
+        </div>
+      </div>
+      <div class="hero-image">
+        <!-- RESIZED: Reduced size for harmony with the page -->
+        <img src="assets/WhatsApp Image 2026-06-05 at 17.11.20.jpeg" alt="SurPlace app screenshot" onerror="this.src='https://placehold.co/600x600?text=App+Preview'">
+      </div>
+    </section>
+
+    <section class="features container">
+      <div class="feature-card">
+        <h2>Live Verified Reviews</h2>
+        <p>Only real-time photos and videos are accepted so guests can trust every plate and restaurant rating.</p>
+      </div>
+      <div class="feature-card">
+        <h2>Discover Nearby Food</h2>
+        <p>Find top-rated restaurants, trending dishes, and community favorites close to you.</p>
+      </div>
+      <div class="feature-card">
+        <h2>Smart Review Feed</h2>
+        <p>See the latest reviews, highest ratings, and trusted visits in an easy feed built for food lovers.</p>
+      </div>
+    </section>
+
+    <section class="gallery container">
+      <h2>SurPlace in action</h2>
+      <div class="image-grid">
+        <img src="assets/WhatsApp Image 2026-06-05 at 17.04.43.jpeg" alt="SurPlace feed screenshot" onerror="this.src='https://placehold.co/400x500?text=Feed'">
+        <img src="assets/WhatsApp Image 2026-06-05 at 17.15.05.jpeg" alt="SurPlace restaurant dashboard" onerror="this.src='https://placehold.co/400x500?text=Dashboard'">
+        <img src="assets/WhatsApp Image 2026-06-05 at 17.11.45.jpeg" alt="SurPlace profile screen" onerror="this.src='https://placehold.co/400x500?text=Profile'">
+      </div>
+    </section>
+
+    <section class="about-app container">
+      <div>
+        <h2>Why SurPlace?</h2>
+        <p>SurPlace is a mobile-first food review experience built to help diners decide where to eat with confidence. The app supports both restaurant and plate reviews, giving restaurants honest customer feedback while helping diners discover the best meals nearby.</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <strong>Live reviews</strong>
+          <span>100% real-time content</span>
+        </div>
+        <div class="stat-card">
+          <strong>Nearby discovery</strong>
+          <span>Search by restaurant or plate</span>
+        </div>
+        <div class="stat-card">
+          <strong>Trusted community</strong>
+          <span>Feedback from active food lovers</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Try the surplace app</p>
+      <a href="about.html">About Us</a>
+    </div>
+  </footer>
+</body>
+</html>
