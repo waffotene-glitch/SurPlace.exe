@@ -1,0 +1,30 @@
+name: Deploy Backend API
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH into VPS and Update Backend
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+            # 1. Move to backend folder
+            cd /var/www/surplaceApp/SurPlace.exe
+            
+            # 2. Pull the latest code
+            git pull origin main
+            
+            # 3. Move to the API folder to install dependencies
+            cd apps/api
+            npm install
+            
+            # 4. Restart PM2 to apply changes safely
+            pm2 restart all
