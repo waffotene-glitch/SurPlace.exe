@@ -5,6 +5,10 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
+    "plugins": [
+      "expo-build-properties",
+      "expo-secure-store"
+    ],
     "splash": {
       "resizeMode": "contain",
       "backgroundColor": "#FAF7F2"
@@ -28,10 +32,16 @@
         "CAMERA",
         "READ_MEDIA_IMAGES",
         "RECORD_AUDIO"
-      ]
+      ],
+      "package": "com.surplace.app"
     },
     "web": {
       "bundler": "metro"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "66c26e48-f667-4c1e-b6ed-66041d3a135b"
+      }
     }
   }
 }
