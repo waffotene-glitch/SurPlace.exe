@@ -1,10 +1,14 @@
 const User = require("../models/User");
 const { signToken } = require("../utils/jwt");
 const { mapUser } = require("../utils/responseMappers");
-const { assertRequiredFields, normalizeRole } = require("../utils/validators");
+const {
+  assertRequiredFields,
+  normalizeEmail,
+  normalizeFullName,
+  normalizeRole,
+} = require("../utils/validators");
 const { createServiceError } = require("./serviceError");
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PASSWORD_LETTER_PATTERN = /[A-Za-z]/;
 const PASSWORD_NUMBER_PATTERN = /\d/;
 
@@ -22,20 +26,8 @@ class AuthService {
 
     assertRequiredFields({ fullName, email, password }, ["fullName", "email", "password"]);
 
-    const normalizedFullName = fullName.trim();
-    const normalizedEmail = email.trim().toLowerCase();
-
-    if (normalizedFullName.length < 2) {
-      throw createServiceError(400, "Full name must be at least 2 characters.");
-    }
-
-    if (!/[A-Za-z]/.test(normalizedFullName)) {
-      throw createServiceError(400, "Full name cannot be only numbers.");
-    }
-
-    if (!EMAIL_PATTERN.test(normalizedEmail)) {
-      throw createServiceError(400, "Enter a valid email address.");
-    }
+    const normalizedFullName = normalizeFullName(fullName);
+    const normalizedEmail = normalizeEmail(email);
 
     if (password.length < 4) {
       throw createServiceError(400, "Password must be at least 4 characters.");
@@ -74,7 +66,7 @@ class AuthService {
 
     assertRequiredFields({ email, password }, ["email", "password"]);
 
-    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedEmail = normalizeEmail(email);
     const user = await User.findOne({ email: normalizedEmail }).select("+password");
 
     if (!user || !(await user.comparePassword(password))) {

@@ -5,6 +5,8 @@ const { mapPlate, mapRestaurant } = require("../utils/responseMappers");
 const { assertObjectId } = require("../utils/validators");
 const { createServiceError } = require("./serviceError");
 
+const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 class RestaurantService {
   async listRestaurants(query = {}) {
     const { q } = query;
@@ -101,9 +103,34 @@ class RestaurantService {
     };
   }
 
+  async assertUniqueManagerRestaurantName({ managerId, name, restaurantId }) {
+    const filter = {
+      manager: managerId,
+      name: {
+        $regex: `^${escapeRegex(name.trim())}$`,
+        $options: "i",
+      },
+    };
+
+    if (restaurantId) {
+      filter._id = { $ne: restaurantId };
+    }
+
+    const duplicateRestaurant = await Restaurant.findOne(filter).select("_id").lean();
+
+    if (duplicateRestaurant) {
+      throw createServiceError(400, "You already have a restaurant with this name.");
+    }
+  }
+
   async upsertManagedRestaurant({ managedRestaurant, user, data }) {
     this.validateRestaurantPayload(data);
     const restaurantUpdate = this.buildRestaurantUpdate(data, user._id);
+    await this.assertUniqueManagerRestaurantName({
+      managerId: user._id,
+      name: restaurantUpdate.name,
+      restaurantId: managedRestaurant?._id,
+    });
 
     if (!managedRestaurant) {
       const restaurant = await Restaurant.create(restaurantUpdate);

@@ -102,6 +102,12 @@ From the project root:
 npm.cmd --workspace apps/api run dev
 ```
 
+Swagger API docs are available at:
+
+```text
+http://localhost:5000/api-docs
+```
+
 Expected output:
 
 ```text
