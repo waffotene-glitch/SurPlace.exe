@@ -1,0 +1,36 @@
+name: Deploy HTML Website
+
+on:
+  push:
+    branches:
+      - Website
+
+jobs:
+
+  validate:
+    name: Validate Website Code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+     
+      - name: Check HTML Syntax
+        uses: htmlhint/htmlhint-action@v2
+        with:
+          config_path: '.htmlhintrc' 
+          scan_path: './apps/Website' 
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH into VPS and Update Website
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+           
+            cd /var/www/surplaceApp/website/SurPlace.exe
+            
+            git pull origin Website 
