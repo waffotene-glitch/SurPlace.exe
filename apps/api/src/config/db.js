@@ -15,4 +15,3 @@ const disconnectDatabase = async () => {
 };
 
 module.exports = { connectDatabase, disconnectDatabase };
-//
