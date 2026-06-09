@@ -6,7 +6,51 @@ on:
       - main
 
 jobs:
+  
+  test:
+    name: Run Automated Tests
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Workspace Dependencies
+        run: npm install
+
+      - name: Run Backend Unit Tests
+        working-directory: ./apps/api
+        run: npm run test:unit --if-present
+
+      - name: Start Backend in Test Mode
+        working-directory: ./apps/api
+        run: npm run start &
+        env:
+          PORT: 5000
+          MONGODB_URI: mongodb://127.0.0.1:27017/verified-food-review_test
+
+      - name: Wait for API to Boot
+        run: npx wait-on http://127.0.0.1:5000/api/health --timeout 30000
+
+      - name: Run End-to-End Integration Tests
+        working-directory: ./apps/api
+        run: npm run test:integration --if-present
+
   deploy:
+    name: SSH into VPS and Update Backend
+    needs: test 
     runs-on: ubuntu-latest
     steps:
       - name: SSH into VPS and Update Backend
@@ -16,15 +60,11 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
-            # 1. Move to backend folder
             cd /var/www/surplaceApp/SurPlace.exe
             
-            # 2. Pull the latest code
             git pull origin main
             
-            # 3. Move to the API folder to install dependencies
             cd apps/api
             npm install
             
-            # 4. Restart PM2 to apply changes safely
             pm2 restart all
