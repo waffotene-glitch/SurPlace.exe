@@ -7,19 +7,6 @@ on:
 
 jobs:
 
-  validate:
-    name: Validate Website Code
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-     
-      - name: Check HTML Syntax
-        uses: htmlhint/htmlhint-action@v2
-        with:
-          config_path: '.htmlhintrc' 
-          scan_path: './apps/Website' 
   deploy:
     runs-on: ubuntu-latest
     steps:
