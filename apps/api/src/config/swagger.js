@@ -10,8 +10,8 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:5050",
-        description: "Local API server",
+        url: "https://surplace.duckdns.org",
+        description: "Production API server",
       },
     ],
     components: {
